@@ -1,0 +1,53 @@
+syntax = "proto3";
+package wgpb;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "wgpb";
+
+message Config {
+    Server server = 1;
+    Logging logging = 2;
+    repeated Api apis = 3;
+}
+
+message Server {
+    string listen_addr = 1;
+    repeated Host hosts = 2;
+}
+
+message Host {
+    string name = 1;
+    string key_pem = 2;
+    string cert_pem = 3;
+}
+
+message Logging {
+    LogLevel level = 1;
+}
+
+enum LogLevel {
+    DEBUG = 0;
+    INFO = 1;
+    ERROR = 2;
+    WARNING = 3;
+    PANIC = 4;
+    FATAL = 5;
+}
+
+message Api {
+    string name = 1;
+    EngineConfiguration engine_configuration = 2;
+    bool enable_single_flight = 3;
+    bool enable_graphql_endpoint = 4;
+    repeated Operation operations = 5;
+}
+
+message Operation {
+    string name = 1;
+    string content = 2;
+}
+
+message EngineConfiguration {
+    int64 default_flush_interval = 1;
+}
