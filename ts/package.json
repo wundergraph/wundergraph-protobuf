@@ -1,5 +1,5 @@
 {
-  "name": "wundergraph-protobuf",
+  "name": "protobuf",
   "version": "0.0.1",
   "description": "",
   "types": "./wgpb/*.d.ts",
