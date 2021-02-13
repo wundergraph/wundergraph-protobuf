@@ -1,1 +1,1 @@
-module github.com/wundergraph-protobuf/go
+module github.com/wundergraph/wundergraph-protobuf/go
