@@ -2,6 +2,16 @@
 # yarn lockfile v1
 
 
+"@types/google-protobuf@^3.7.4":
+  version "3.7.4"
+  resolved "https://registry.yarnpkg.com/@types/google-protobuf/-/google-protobuf-3.7.4.tgz#1621c50ceaf5aefa699851da8e0ea606a2943a39"
+  integrity sha512-6PjMFKl13cgB4kRdYtvyjKl8VVa0PXS2IdVxHhQ8GEKbxBkyJtSbaIeK1eZGjDKN7dvUh4vkOvU9FMwYNv4GQQ==
+
+google-protobuf@^3.15.0-rc.1:
+  version "3.15.0-rc.1"
+  resolved "https://registry.yarnpkg.com/google-protobuf/-/google-protobuf-3.15.0-rc.1.tgz#f60b5c53389109bb7964e53d2b1e0a19155c5cd0"
+  integrity sha512-aDpp0vaiFaM9Thv5H0UC2FJ3x4XzBABM1v+Q5V5GGyTNd1VsZXjKTPdI0ObFgio2tpBWO7nFy2cQmJ9n+6n95A==
+
 google-protobuf@^3.6.1:
   version "3.14.0"
   resolved "https://registry.yarnpkg.com/google-protobuf/-/google-protobuf-3.14.0.tgz#20373d22046e63831a5110e11a84f713cc43651e"

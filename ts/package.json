@@ -16,6 +16,10 @@
   "author": "Jens Neuse",
   "license": "UNLICENSED",
   "dependencies": {
+    "google-protobuf": "^3.15.0-rc.1"
+  },
+  "devDependencies": {
+    "@types/google-protobuf": "^3.7.4",
     "ts-protoc-gen": "^0.14.0"
   }
 }

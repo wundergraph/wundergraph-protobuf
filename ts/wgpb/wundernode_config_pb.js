@@ -14,8 +14,8 @@ var jspb = require('google-protobuf');
 var goog = jspb;
 var global = Function('return this')();
 
-var google_protobuf_timestamp_pb = require('google-protobuf/google/protobuf/timestamp_pb.js');
-goog.object.extend(proto, google_protobuf_timestamp_pb);
+var google_protobuf_duration_pb = require('google-protobuf/google/protobuf/duration_pb.js');
+goog.object.extend(proto, google_protobuf_duration_pb);
 goog.exportSymbol('proto.wgpb.Api', null, global);
 goog.exportSymbol('proto.wgpb.Config', null, global);
 goog.exportSymbol('proto.wgpb.EngineConfiguration', null, global);
@@ -474,7 +474,12 @@ proto.wgpb.Server.toObject = function(includeInstance, msg) {
   var f, obj = {
     listenAddr: jspb.Message.getFieldWithDefault(msg, 1, ""),
     hostsList: jspb.Message.toObjectList(msg.getHostsList(),
-    proto.wgpb.Host.toObject, includeInstance)
+    proto.wgpb.Host.toObject, includeInstance),
+    gracefulShutdownTimeout: (f = msg.getGracefulShutdownTimeout()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
+    keepAlive: (f = msg.getKeepAlive()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
+    readTimeout: (f = msg.getReadTimeout()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
+    writeTimeout: (f = msg.getWriteTimeout()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
+    idleTimeout: (f = msg.getIdleTimeout()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -520,6 +525,31 @@ proto.wgpb.Server.deserializeBinaryFromReader = function(msg, reader) {
       reader.readMessage(value,proto.wgpb.Host.deserializeBinaryFromReader);
       msg.addHosts(value);
       break;
+    case 3:
+      var value = new google_protobuf_duration_pb.Duration;
+      reader.readMessage(value,google_protobuf_duration_pb.Duration.deserializeBinaryFromReader);
+      msg.setGracefulShutdownTimeout(value);
+      break;
+    case 4:
+      var value = new google_protobuf_duration_pb.Duration;
+      reader.readMessage(value,google_protobuf_duration_pb.Duration.deserializeBinaryFromReader);
+      msg.setKeepAlive(value);
+      break;
+    case 5:
+      var value = new google_protobuf_duration_pb.Duration;
+      reader.readMessage(value,google_protobuf_duration_pb.Duration.deserializeBinaryFromReader);
+      msg.setReadTimeout(value);
+      break;
+    case 6:
+      var value = new google_protobuf_duration_pb.Duration;
+      reader.readMessage(value,google_protobuf_duration_pb.Duration.deserializeBinaryFromReader);
+      msg.setWriteTimeout(value);
+      break;
+    case 7:
+      var value = new google_protobuf_duration_pb.Duration;
+      reader.readMessage(value,google_protobuf_duration_pb.Duration.deserializeBinaryFromReader);
+      msg.setIdleTimeout(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -562,6 +592,46 @@ proto.wgpb.Server.serializeBinaryToWriter = function(message, writer) {
       2,
       f,
       proto.wgpb.Host.serializeBinaryToWriter
+    );
+  }
+  f = message.getGracefulShutdownTimeout();
+  if (f != null) {
+    writer.writeMessage(
+      3,
+      f,
+      google_protobuf_duration_pb.Duration.serializeBinaryToWriter
+    );
+  }
+  f = message.getKeepAlive();
+  if (f != null) {
+    writer.writeMessage(
+      4,
+      f,
+      google_protobuf_duration_pb.Duration.serializeBinaryToWriter
+    );
+  }
+  f = message.getReadTimeout();
+  if (f != null) {
+    writer.writeMessage(
+      5,
+      f,
+      google_protobuf_duration_pb.Duration.serializeBinaryToWriter
+    );
+  }
+  f = message.getWriteTimeout();
+  if (f != null) {
+    writer.writeMessage(
+      6,
+      f,
+      google_protobuf_duration_pb.Duration.serializeBinaryToWriter
+    );
+  }
+  f = message.getIdleTimeout();
+  if (f != null) {
+    writer.writeMessage(
+      7,
+      f,
+      google_protobuf_duration_pb.Duration.serializeBinaryToWriter
     );
   }
 };
@@ -620,6 +690,191 @@ proto.wgpb.Server.prototype.addHosts = function(opt_value, opt_index) {
  */
 proto.wgpb.Server.prototype.clearHostsList = function() {
   return this.setHostsList([]);
+};
+
+
+/**
+ * optional google.protobuf.Duration graceful_shutdown_timeout = 3;
+ * @return {?proto.google.protobuf.Duration}
+ */
+proto.wgpb.Server.prototype.getGracefulShutdownTimeout = function() {
+  return /** @type{?proto.google.protobuf.Duration} */ (
+    jspb.Message.getWrapperField(this, google_protobuf_duration_pb.Duration, 3));
+};
+
+
+/**
+ * @param {?proto.google.protobuf.Duration|undefined} value
+ * @return {!proto.wgpb.Server} returns this
+*/
+proto.wgpb.Server.prototype.setGracefulShutdownTimeout = function(value) {
+  return jspb.Message.setWrapperField(this, 3, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.wgpb.Server} returns this
+ */
+proto.wgpb.Server.prototype.clearGracefulShutdownTimeout = function() {
+  return this.setGracefulShutdownTimeout(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.wgpb.Server.prototype.hasGracefulShutdownTimeout = function() {
+  return jspb.Message.getField(this, 3) != null;
+};
+
+
+/**
+ * optional google.protobuf.Duration keep_alive = 4;
+ * @return {?proto.google.protobuf.Duration}
+ */
+proto.wgpb.Server.prototype.getKeepAlive = function() {
+  return /** @type{?proto.google.protobuf.Duration} */ (
+    jspb.Message.getWrapperField(this, google_protobuf_duration_pb.Duration, 4));
+};
+
+
+/**
+ * @param {?proto.google.protobuf.Duration|undefined} value
+ * @return {!proto.wgpb.Server} returns this
+*/
+proto.wgpb.Server.prototype.setKeepAlive = function(value) {
+  return jspb.Message.setWrapperField(this, 4, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.wgpb.Server} returns this
+ */
+proto.wgpb.Server.prototype.clearKeepAlive = function() {
+  return this.setKeepAlive(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.wgpb.Server.prototype.hasKeepAlive = function() {
+  return jspb.Message.getField(this, 4) != null;
+};
+
+
+/**
+ * optional google.protobuf.Duration read_timeout = 5;
+ * @return {?proto.google.protobuf.Duration}
+ */
+proto.wgpb.Server.prototype.getReadTimeout = function() {
+  return /** @type{?proto.google.protobuf.Duration} */ (
+    jspb.Message.getWrapperField(this, google_protobuf_duration_pb.Duration, 5));
+};
+
+
+/**
+ * @param {?proto.google.protobuf.Duration|undefined} value
+ * @return {!proto.wgpb.Server} returns this
+*/
+proto.wgpb.Server.prototype.setReadTimeout = function(value) {
+  return jspb.Message.setWrapperField(this, 5, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.wgpb.Server} returns this
+ */
+proto.wgpb.Server.prototype.clearReadTimeout = function() {
+  return this.setReadTimeout(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.wgpb.Server.prototype.hasReadTimeout = function() {
+  return jspb.Message.getField(this, 5) != null;
+};
+
+
+/**
+ * optional google.protobuf.Duration write_timeout = 6;
+ * @return {?proto.google.protobuf.Duration}
+ */
+proto.wgpb.Server.prototype.getWriteTimeout = function() {
+  return /** @type{?proto.google.protobuf.Duration} */ (
+    jspb.Message.getWrapperField(this, google_protobuf_duration_pb.Duration, 6));
+};
+
+
+/**
+ * @param {?proto.google.protobuf.Duration|undefined} value
+ * @return {!proto.wgpb.Server} returns this
+*/
+proto.wgpb.Server.prototype.setWriteTimeout = function(value) {
+  return jspb.Message.setWrapperField(this, 6, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.wgpb.Server} returns this
+ */
+proto.wgpb.Server.prototype.clearWriteTimeout = function() {
+  return this.setWriteTimeout(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.wgpb.Server.prototype.hasWriteTimeout = function() {
+  return jspb.Message.getField(this, 6) != null;
+};
+
+
+/**
+ * optional google.protobuf.Duration idle_timeout = 7;
+ * @return {?proto.google.protobuf.Duration}
+ */
+proto.wgpb.Server.prototype.getIdleTimeout = function() {
+  return /** @type{?proto.google.protobuf.Duration} */ (
+    jspb.Message.getWrapperField(this, google_protobuf_duration_pb.Duration, 7));
+};
+
+
+/**
+ * @param {?proto.google.protobuf.Duration|undefined} value
+ * @return {!proto.wgpb.Server} returns this
+*/
+proto.wgpb.Server.prototype.setIdleTimeout = function(value) {
+  return jspb.Message.setWrapperField(this, 7, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.wgpb.Server} returns this
+ */
+proto.wgpb.Server.prototype.clearIdleTimeout = function() {
+  return this.setIdleTimeout(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.wgpb.Server.prototype.hasIdleTimeout = function() {
+  return jspb.Message.getField(this, 7) != null;
 };
 
 

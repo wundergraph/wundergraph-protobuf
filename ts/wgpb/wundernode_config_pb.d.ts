@@ -2,7 +2,7 @@
 // file: wundernode_config.proto
 
 import * as jspb from "google-protobuf";
-import * as google_protobuf_timestamp_pb from "google-protobuf/google/protobuf/timestamp_pb";
+import * as google_protobuf_duration_pb from "google-protobuf/google/protobuf/duration_pb";
 
 export class Config extends jspb.Message {
   hasServer(): boolean;
@@ -47,6 +47,31 @@ export class Server extends jspb.Message {
   setHostsList(value: Array<Host>): void;
   addHosts(value?: Host, index?: number): Host;
 
+  hasGracefulShutdownTimeout(): boolean;
+  clearGracefulShutdownTimeout(): void;
+  getGracefulShutdownTimeout(): google_protobuf_duration_pb.Duration | undefined;
+  setGracefulShutdownTimeout(value?: google_protobuf_duration_pb.Duration): void;
+
+  hasKeepAlive(): boolean;
+  clearKeepAlive(): void;
+  getKeepAlive(): google_protobuf_duration_pb.Duration | undefined;
+  setKeepAlive(value?: google_protobuf_duration_pb.Duration): void;
+
+  hasReadTimeout(): boolean;
+  clearReadTimeout(): void;
+  getReadTimeout(): google_protobuf_duration_pb.Duration | undefined;
+  setReadTimeout(value?: google_protobuf_duration_pb.Duration): void;
+
+  hasWriteTimeout(): boolean;
+  clearWriteTimeout(): void;
+  getWriteTimeout(): google_protobuf_duration_pb.Duration | undefined;
+  setWriteTimeout(value?: google_protobuf_duration_pb.Duration): void;
+
+  hasIdleTimeout(): boolean;
+  clearIdleTimeout(): void;
+  getIdleTimeout(): google_protobuf_duration_pb.Duration | undefined;
+  setIdleTimeout(value?: google_protobuf_duration_pb.Duration): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Server.AsObject;
   static toObject(includeInstance: boolean, msg: Server): Server.AsObject;
@@ -61,6 +86,11 @@ export namespace Server {
   export type AsObject = {
     listenAddr: string,
     hostsList: Array<Host.AsObject>,
+    gracefulShutdownTimeout?: google_protobuf_duration_pb.Duration.AsObject,
+    keepAlive?: google_protobuf_duration_pb.Duration.AsObject,
+    readTimeout?: google_protobuf_duration_pb.Duration.AsObject,
+    writeTimeout?: google_protobuf_duration_pb.Duration.AsObject,
+    idleTimeout?: google_protobuf_duration_pb.Duration.AsObject,
   }
 }
 
