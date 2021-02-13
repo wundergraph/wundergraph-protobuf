@@ -51,8 +51,72 @@ message Api {
 message Operation {
     string name = 1;
     string content = 2;
+    OperationType operation_type = 3;
+    JSONSchema variables_schema = 4;
+    JSONSchema response_schema = 5;
+}
+
+enum OperationType {
+    QUERY = 0;
+    MUTATION = 1;
+    SUBSCRIPTION = 2;
+}
+
+message JSONSchema {
+    JSONSchemaType type = 1;
+    repeated JSONSchemaProperty properties = 2;
+    JSONSchema items = 3;
+    repeated string required = 4;
+    bool additional_properties = 5;
+}
+
+message JSONSchemaProperty {
+    string name = 1;
+    JSONSchema schema = 2;
+}
+
+enum JSONSchemaType {
+    ARRAY = 0;
+    OBJECT = 1;
+
 }
 
 message EngineConfiguration {
     int64 default_flush_interval = 1;
+    repeated DataSourceConfiguration datasource_configurations = 2;
+    repeated FieldConfiguration field_configurations = 3;
+}
+
+message DataSourceConfiguration {
+    string name = 1;
+    repeated TypeField root_nodes = 2;
+    repeated TypeField child_nodes = 3;
+    bool override_field_path_from_alias = 4;
+    bytes custom_configuration = 5;
+}
+
+message FieldConfiguration {
+    string type_name = 1;
+    string field_name = 2;
+    bool disable_default_field_mapping = 3;
+    repeated string path = 4;
+    bool respect_override_field_path_from_alias = 5;
+    repeated ArgumentConfiguration arguments_configuration = 6;
+    repeated string requires_fields = 7;
+}
+
+message TypeField {
+    string type_name = 1;
+    repeated string field_names = 2;
+}
+
+enum ArgumentSource {
+    OBJECT_FIELD = 0;
+    FIELD_ARGUMENT = 1;
+}
+
+message ArgumentConfiguration {
+    string name = 1;
+    ArgumentSource source_type = 2;
+    repeated string source_path = 3;
 }
