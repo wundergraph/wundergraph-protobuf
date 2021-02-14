@@ -349,6 +349,11 @@ export class DataSourceConfiguration extends jspb.Message {
   getGraphql(): DataSourceCustom_GraphQL | undefined;
   setGraphql(value?: DataSourceCustom_GraphQL): void;
 
+  hasStatic(): boolean;
+  clearStatic(): void;
+  getStatic(): DataSourceCustom_Static | undefined;
+  setStatic(value?: DataSourceCustom_Static): void;
+
   getCustomConfigurationCase(): DataSourceConfiguration.CustomConfigurationCase;
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): DataSourceConfiguration.AsObject;
@@ -368,12 +373,14 @@ export namespace DataSourceConfiguration {
     overrideFieldPathFromAlias: boolean,
     rest?: DataSourceCustom_REST.AsObject,
     graphql?: DataSourceCustom_GraphQL.AsObject,
+    pb_static?: DataSourceCustom_Static.AsObject,
   }
 
   export enum CustomConfigurationCase {
     CUSTOM_CONFIGURATION_NOT_SET = 0,
     REST = 5,
     GRAPHQL = 6,
+    STATIC = 7,
   }
 }
 
@@ -430,6 +437,26 @@ export namespace DataSourceCustom_GraphQL {
   export type AsObject = {
     fetch?: FetchConfiguration.AsObject,
     subscription?: GraphQLSubscriptionConfiguration.AsObject,
+  }
+}
+
+export class DataSourceCustom_Static extends jspb.Message {
+  getData(): string;
+  setData(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): DataSourceCustom_Static.AsObject;
+  static toObject(includeInstance: boolean, msg: DataSourceCustom_Static): DataSourceCustom_Static.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: DataSourceCustom_Static, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): DataSourceCustom_Static;
+  static deserializeBinaryFromReader(message: DataSourceCustom_Static, reader: jspb.BinaryReader): DataSourceCustom_Static;
+}
+
+export namespace DataSourceCustom_Static {
+  export type AsObject = {
+    data: string,
   }
 }
 
