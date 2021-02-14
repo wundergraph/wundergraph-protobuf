@@ -1,1 +1,0 @@
-module github.com/wundergraph/wundergraph-protobuf/go
