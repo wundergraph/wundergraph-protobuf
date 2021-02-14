@@ -300,6 +300,9 @@ export class EngineConfiguration extends jspb.Message {
   setFieldConfigurationsList(value: Array<FieldConfiguration>): void;
   addFieldConfigurations(value?: FieldConfiguration, index?: number): FieldConfiguration;
 
+  getGraphqlSchema(): string;
+  setGraphqlSchema(value: string): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): EngineConfiguration.AsObject;
   static toObject(includeInstance: boolean, msg: EngineConfiguration): EngineConfiguration.AsObject;
@@ -315,6 +318,7 @@ export namespace EngineConfiguration {
     defaultFlushInterval: number,
     datasourceConfigurationsList: Array<DataSourceConfiguration.AsObject>,
     fieldConfigurationsList: Array<FieldConfiguration.AsObject>,
+    graphqlSchema: string,
   }
 }
 

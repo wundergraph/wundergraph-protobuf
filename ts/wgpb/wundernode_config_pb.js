@@ -2618,7 +2618,8 @@ proto.wgpb.EngineConfiguration.toObject = function(includeInstance, msg) {
     datasourceConfigurationsList: jspb.Message.toObjectList(msg.getDatasourceConfigurationsList(),
     proto.wgpb.DataSourceConfiguration.toObject, includeInstance),
     fieldConfigurationsList: jspb.Message.toObjectList(msg.getFieldConfigurationsList(),
-    proto.wgpb.FieldConfiguration.toObject, includeInstance)
+    proto.wgpb.FieldConfiguration.toObject, includeInstance),
+    graphqlSchema: jspb.Message.getFieldWithDefault(msg, 4, "")
   };
 
   if (includeInstance) {
@@ -2668,6 +2669,10 @@ proto.wgpb.EngineConfiguration.deserializeBinaryFromReader = function(msg, reade
       var value = new proto.wgpb.FieldConfiguration;
       reader.readMessage(value,proto.wgpb.FieldConfiguration.deserializeBinaryFromReader);
       msg.addFieldConfigurations(value);
+      break;
+    case 4:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setGraphqlSchema(value);
       break;
     default:
       reader.skipField();
@@ -2719,6 +2724,13 @@ proto.wgpb.EngineConfiguration.serializeBinaryToWriter = function(message, write
       3,
       f,
       proto.wgpb.FieldConfiguration.serializeBinaryToWriter
+    );
+  }
+  f = message.getGraphqlSchema();
+  if (f.length > 0) {
+    writer.writeString(
+      4,
+      f
     );
   }
 };
@@ -2815,6 +2827,24 @@ proto.wgpb.EngineConfiguration.prototype.addFieldConfigurations = function(opt_v
  */
 proto.wgpb.EngineConfiguration.prototype.clearFieldConfigurationsList = function() {
   return this.setFieldConfigurationsList([]);
+};
+
+
+/**
+ * optional string graphql_schema = 4;
+ * @return {string}
+ */
+proto.wgpb.EngineConfiguration.prototype.getGraphqlSchema = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.wgpb.EngineConfiguration} returns this
+ */
+proto.wgpb.EngineConfiguration.prototype.setGraphqlSchema = function(value) {
+  return jspb.Message.setProto3StringField(this, 4, value);
 };
 
 
@@ -4078,7 +4108,7 @@ proto.wgpb.FetchConfiguration.serializeBinaryToWriter = function(message, writer
 
 
 /**
- * optional string url = 1;
+ * optional string URL = 1;
  * @return {string}
  */
 proto.wgpb.FetchConfiguration.prototype.getUrl = function() {

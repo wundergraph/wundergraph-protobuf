@@ -91,6 +91,7 @@ message EngineConfiguration {
     int64 default_flush_interval = 1;
     repeated DataSourceConfiguration datasource_configurations = 2;
     repeated FieldConfiguration field_configurations = 3;
+    string graphql_schema = 4;
 }
 
 message DataSourceConfiguration {
@@ -129,7 +130,7 @@ message GraphQLSubscriptionConfiguration {
 }
 
 message FetchConfiguration {
-    string url = 1;
+    string URL = 1;
     HTTPMethod method = 2;
     map<string, HTTPHeader> header = 3;
     string body = 4;
