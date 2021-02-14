@@ -32,12 +32,13 @@ message Logging {
 }
 
 enum LogLevel {
-    DEBUG = 0;
-    INFO = 1;
-    ERROR = 2;
-    WARNING = 3;
-    PANIC = 4;
-    FATAL = 5;
+    LogLevel_UNDEFINED = 0;
+    DEBUG = 1;
+    INFO = 2;
+    ERROR = 3;
+    WARNING = 4;
+    PANIC = 5;
+    FATAL = 6;
 }
 
 message Api {
@@ -57,9 +58,10 @@ message Operation {
 }
 
 enum OperationType {
-    QUERY = 0;
-    MUTATION = 1;
-    SUBSCRIPTION = 2;
+    OperationType_UNDEFINED = 0;
+    QUERY = 1;
+    MUTATION = 2;
+    SUBSCRIPTION = 3;
 }
 
 message JSONSchema {
@@ -76,9 +78,14 @@ message JSONSchemaProperty {
 }
 
 enum JSONSchemaType {
-    ARRAY = 0;
-    OBJECT = 1;
-
+    JSONSchemaType_UNDEFINED = 0;
+    STRING = 1;
+    INTEGER = 2;
+    NUMBER = 3;
+    OBJECT = 4;
+    ARRAY = 5;
+    BOOLEAN = 6;
+    NULL = 7;
 }
 
 message EngineConfiguration {
@@ -88,11 +95,65 @@ message EngineConfiguration {
 }
 
 message DataSourceConfiguration {
-    string name = 1;
+    DataSourceKind kind = 1;
     repeated TypeField root_nodes = 2;
     repeated TypeField child_nodes = 3;
     bool override_field_path_from_alias = 4;
-    bytes custom_configuration = 5;
+    oneof custom_configuration {
+        DataSourceCustom_REST rest = 5;
+        DataSourceCustom_GraphQL graphql = 6;
+    }
+}
+
+enum DataSourceKind {
+    DataSourceKind_UNDEFINED = 0;
+    STATIC = 1;
+    REST = 2;
+    GRAPHQL = 3;
+}
+
+message DataSourceCustom_REST {
+    FetchConfiguration fetch = 1;
+    RESTSubscriptionConfiguration subscription = 2;
+}
+
+message DataSourceCustom_GraphQL {
+    FetchConfiguration fetch = 1;
+    GraphQLSubscriptionConfiguration subscription = 2;
+}
+
+message GraphQLSubscriptionConfiguration {
+    string URL = 1;
+}
+
+message FetchConfiguration {
+    string url = 1;
+    HTTPMethod method = 2;
+    map<string, HTTPHeader> header = 3;
+    string body = 4;
+    repeated URLQueryConfiguration query = 5;
+}
+
+message RESTSubscriptionConfiguration {
+    int64 polling_interval_millis = 1;
+    bool skip_publish_same_response = 2;
+}
+
+message URLQueryConfiguration {
+    string name = 1;
+    string value = 2;
+}
+
+message HTTPHeader {
+    repeated string values = 1;
+}
+
+enum HTTPMethod {
+    HTTPMethod_UNDEFINED = 0;
+    GET = 1;
+    POST = 3;
+    PUT = 4;
+    DELETE = 5;
 }
 
 message FieldConfiguration {
@@ -111,8 +172,9 @@ message TypeField {
 }
 
 enum ArgumentSource {
-    OBJECT_FIELD = 0;
-    FIELD_ARGUMENT = 1;
+    ArgumentSource_UNDEFINED = 0;
+    OBJECT_FIELD = 1;
+    FIELD_ARGUMENT = 2;
 }
 
 message ArgumentConfiguration {

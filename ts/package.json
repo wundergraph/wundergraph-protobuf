@@ -7,7 +7,8 @@
     "./wgpb"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublishOnly": "node setversion.js"
   },
   "repository": {
     "type": "git",
@@ -20,6 +21,7 @@
   },
   "devDependencies": {
     "@types/google-protobuf": "^3.7.4",
+    "git-tag-version": "^1.3.1",
     "ts-protoc-gen": "^0.14.0"
   }
 }

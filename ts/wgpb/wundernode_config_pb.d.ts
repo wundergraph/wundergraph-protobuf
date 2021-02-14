@@ -323,8 +323,8 @@ export namespace EngineConfiguration {
 }
 
 export class DataSourceConfiguration extends jspb.Message {
-  getName(): string;
-  setName(value: string): void;
+  getKind(): DataSourceKindMap[keyof DataSourceKindMap];
+  setKind(value: DataSourceKindMap[keyof DataSourceKindMap]): void;
 
   clearRootNodesList(): void;
   getRootNodesList(): Array<TypeField>;
@@ -339,11 +339,17 @@ export class DataSourceConfiguration extends jspb.Message {
   getOverrideFieldPathFromAlias(): boolean;
   setOverrideFieldPathFromAlias(value: boolean): void;
 
-  getCustomConfiguration(): Uint8Array | string;
-  getCustomConfiguration_asU8(): Uint8Array;
-  getCustomConfiguration_asB64(): string;
-  setCustomConfiguration(value: Uint8Array | string): void;
+  hasRest(): boolean;
+  clearRest(): void;
+  getRest(): DataSourceCustom_REST | undefined;
+  setRest(value?: DataSourceCustom_REST): void;
 
+  hasGraphql(): boolean;
+  clearGraphql(): void;
+  getGraphql(): DataSourceCustom_GraphQL | undefined;
+  setGraphql(value?: DataSourceCustom_GraphQL): void;
+
+  getCustomConfigurationCase(): DataSourceConfiguration.CustomConfigurationCase;
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): DataSourceConfiguration.AsObject;
   static toObject(includeInstance: boolean, msg: DataSourceConfiguration): DataSourceConfiguration.AsObject;
@@ -356,11 +362,201 @@ export class DataSourceConfiguration extends jspb.Message {
 
 export namespace DataSourceConfiguration {
   export type AsObject = {
-    name: string,
+    kind: DataSourceKindMap[keyof DataSourceKindMap],
     rootNodesList: Array<TypeField.AsObject>,
     childNodesList: Array<TypeField.AsObject>,
     overrideFieldPathFromAlias: boolean,
-    customConfiguration: Uint8Array | string,
+    rest?: DataSourceCustom_REST.AsObject,
+    graphql?: DataSourceCustom_GraphQL.AsObject,
+  }
+
+  export enum CustomConfigurationCase {
+    CUSTOM_CONFIGURATION_NOT_SET = 0,
+    REST = 5,
+    GRAPHQL = 6,
+  }
+}
+
+export class DataSourceCustom_REST extends jspb.Message {
+  hasFetch(): boolean;
+  clearFetch(): void;
+  getFetch(): FetchConfiguration | undefined;
+  setFetch(value?: FetchConfiguration): void;
+
+  hasSubscription(): boolean;
+  clearSubscription(): void;
+  getSubscription(): RESTSubscriptionConfiguration | undefined;
+  setSubscription(value?: RESTSubscriptionConfiguration): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): DataSourceCustom_REST.AsObject;
+  static toObject(includeInstance: boolean, msg: DataSourceCustom_REST): DataSourceCustom_REST.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: DataSourceCustom_REST, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): DataSourceCustom_REST;
+  static deserializeBinaryFromReader(message: DataSourceCustom_REST, reader: jspb.BinaryReader): DataSourceCustom_REST;
+}
+
+export namespace DataSourceCustom_REST {
+  export type AsObject = {
+    fetch?: FetchConfiguration.AsObject,
+    subscription?: RESTSubscriptionConfiguration.AsObject,
+  }
+}
+
+export class DataSourceCustom_GraphQL extends jspb.Message {
+  hasFetch(): boolean;
+  clearFetch(): void;
+  getFetch(): FetchConfiguration | undefined;
+  setFetch(value?: FetchConfiguration): void;
+
+  hasSubscription(): boolean;
+  clearSubscription(): void;
+  getSubscription(): GraphQLSubscriptionConfiguration | undefined;
+  setSubscription(value?: GraphQLSubscriptionConfiguration): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): DataSourceCustom_GraphQL.AsObject;
+  static toObject(includeInstance: boolean, msg: DataSourceCustom_GraphQL): DataSourceCustom_GraphQL.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: DataSourceCustom_GraphQL, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): DataSourceCustom_GraphQL;
+  static deserializeBinaryFromReader(message: DataSourceCustom_GraphQL, reader: jspb.BinaryReader): DataSourceCustom_GraphQL;
+}
+
+export namespace DataSourceCustom_GraphQL {
+  export type AsObject = {
+    fetch?: FetchConfiguration.AsObject,
+    subscription?: GraphQLSubscriptionConfiguration.AsObject,
+  }
+}
+
+export class GraphQLSubscriptionConfiguration extends jspb.Message {
+  getUrl(): string;
+  setUrl(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GraphQLSubscriptionConfiguration.AsObject;
+  static toObject(includeInstance: boolean, msg: GraphQLSubscriptionConfiguration): GraphQLSubscriptionConfiguration.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: GraphQLSubscriptionConfiguration, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GraphQLSubscriptionConfiguration;
+  static deserializeBinaryFromReader(message: GraphQLSubscriptionConfiguration, reader: jspb.BinaryReader): GraphQLSubscriptionConfiguration;
+}
+
+export namespace GraphQLSubscriptionConfiguration {
+  export type AsObject = {
+    url: string,
+  }
+}
+
+export class FetchConfiguration extends jspb.Message {
+  getUrl(): string;
+  setUrl(value: string): void;
+
+  getMethod(): HTTPMethodMap[keyof HTTPMethodMap];
+  setMethod(value: HTTPMethodMap[keyof HTTPMethodMap]): void;
+
+  getHeaderMap(): jspb.Map<string, HTTPHeader>;
+  clearHeaderMap(): void;
+  getBody(): string;
+  setBody(value: string): void;
+
+  clearQueryList(): void;
+  getQueryList(): Array<URLQueryConfiguration>;
+  setQueryList(value: Array<URLQueryConfiguration>): void;
+  addQuery(value?: URLQueryConfiguration, index?: number): URLQueryConfiguration;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): FetchConfiguration.AsObject;
+  static toObject(includeInstance: boolean, msg: FetchConfiguration): FetchConfiguration.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: FetchConfiguration, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): FetchConfiguration;
+  static deserializeBinaryFromReader(message: FetchConfiguration, reader: jspb.BinaryReader): FetchConfiguration;
+}
+
+export namespace FetchConfiguration {
+  export type AsObject = {
+    url: string,
+    method: HTTPMethodMap[keyof HTTPMethodMap],
+    headerMap: Array<[string, HTTPHeader.AsObject]>,
+    body: string,
+    queryList: Array<URLQueryConfiguration.AsObject>,
+  }
+}
+
+export class RESTSubscriptionConfiguration extends jspb.Message {
+  getPollingIntervalMillis(): number;
+  setPollingIntervalMillis(value: number): void;
+
+  getSkipPublishSameResponse(): boolean;
+  setSkipPublishSameResponse(value: boolean): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): RESTSubscriptionConfiguration.AsObject;
+  static toObject(includeInstance: boolean, msg: RESTSubscriptionConfiguration): RESTSubscriptionConfiguration.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: RESTSubscriptionConfiguration, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): RESTSubscriptionConfiguration;
+  static deserializeBinaryFromReader(message: RESTSubscriptionConfiguration, reader: jspb.BinaryReader): RESTSubscriptionConfiguration;
+}
+
+export namespace RESTSubscriptionConfiguration {
+  export type AsObject = {
+    pollingIntervalMillis: number,
+    skipPublishSameResponse: boolean,
+  }
+}
+
+export class URLQueryConfiguration extends jspb.Message {
+  getName(): string;
+  setName(value: string): void;
+
+  getValue(): string;
+  setValue(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): URLQueryConfiguration.AsObject;
+  static toObject(includeInstance: boolean, msg: URLQueryConfiguration): URLQueryConfiguration.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: URLQueryConfiguration, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): URLQueryConfiguration;
+  static deserializeBinaryFromReader(message: URLQueryConfiguration, reader: jspb.BinaryReader): URLQueryConfiguration;
+}
+
+export namespace URLQueryConfiguration {
+  export type AsObject = {
+    name: string,
+    value: string,
+  }
+}
+
+export class HTTPHeader extends jspb.Message {
+  clearValuesList(): void;
+  getValuesList(): Array<string>;
+  setValuesList(value: Array<string>): void;
+  addValues(value: string, index?: number): string;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): HTTPHeader.AsObject;
+  static toObject(includeInstance: boolean, msg: HTTPHeader): HTTPHeader.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: HTTPHeader, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): HTTPHeader;
+  static deserializeBinaryFromReader(message: HTTPHeader, reader: jspb.BinaryReader): HTTPHeader;
+}
+
+export namespace HTTPHeader {
+  export type AsObject = {
+    valuesList: Array<string>,
   }
 }
 
@@ -471,34 +667,62 @@ export namespace ArgumentConfiguration {
 }
 
 export interface LogLevelMap {
-  DEBUG: 0;
-  INFO: 1;
-  ERROR: 2;
-  WARNING: 3;
-  PANIC: 4;
-  FATAL: 5;
+  LOGLEVEL_UNDEFINED: 0;
+  DEBUG: 1;
+  INFO: 2;
+  ERROR: 3;
+  WARNING: 4;
+  PANIC: 5;
+  FATAL: 6;
 }
 
 export const LogLevel: LogLevelMap;
 
 export interface OperationTypeMap {
-  QUERY: 0;
-  MUTATION: 1;
-  SUBSCRIPTION: 2;
+  OPERATIONTYPE_UNDEFINED: 0;
+  QUERY: 1;
+  MUTATION: 2;
+  SUBSCRIPTION: 3;
 }
 
 export const OperationType: OperationTypeMap;
 
 export interface JSONSchemaTypeMap {
-  ARRAY: 0;
-  OBJECT: 1;
+  JSONSCHEMATYPE_UNDEFINED: 0;
+  STRING: 1;
+  INTEGER: 2;
+  NUMBER: 3;
+  OBJECT: 4;
+  ARRAY: 5;
+  BOOLEAN: 6;
+  NULL: 7;
 }
 
 export const JSONSchemaType: JSONSchemaTypeMap;
 
+export interface DataSourceKindMap {
+  DATASOURCEKIND_UNDEFINED: 0;
+  STATIC: 1;
+  REST: 2;
+  GRAPHQL: 3;
+}
+
+export const DataSourceKind: DataSourceKindMap;
+
+export interface HTTPMethodMap {
+  HTTPMETHOD_UNDEFINED: 0;
+  GET: 1;
+  POST: 3;
+  PUT: 4;
+  DELETE: 5;
+}
+
+export const HTTPMethod: HTTPMethodMap;
+
 export interface ArgumentSourceMap {
-  OBJECT_FIELD: 0;
-  FIELD_ARGUMENT: 1;
+  ARGUMENTSOURCE_UNDEFINED: 0;
+  OBJECT_FIELD: 1;
+  FIELD_ARGUMENT: 2;
 }
 
 export const ArgumentSource: ArgumentSourceMap;
