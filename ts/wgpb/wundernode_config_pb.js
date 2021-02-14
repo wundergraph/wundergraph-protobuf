@@ -20,7 +20,6 @@ goog.exportSymbol('proto.wgpb.Api', null, global);
 goog.exportSymbol('proto.wgpb.ArgumentConfiguration', null, global);
 goog.exportSymbol('proto.wgpb.ArgumentSource', null, global);
 goog.exportSymbol('proto.wgpb.DataSourceConfiguration', null, global);
-goog.exportSymbol('proto.wgpb.DataSourceConfiguration.CustomConfigurationCase', null, global);
 goog.exportSymbol('proto.wgpb.DataSourceCustom_GraphQL', null, global);
 goog.exportSymbol('proto.wgpb.DataSourceCustom_REST', null, global);
 goog.exportSymbol('proto.wgpb.DataSourceCustom_Static', null, global);
@@ -244,7 +243,7 @@ if (goog.DEBUG && !COMPILED) {
  * @constructor
  */
 proto.wgpb.DataSourceConfiguration = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.wgpb.DataSourceConfiguration.repeatedFields_, proto.wgpb.DataSourceConfiguration.oneofGroups_);
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.wgpb.DataSourceConfiguration.repeatedFields_, null);
 };
 goog.inherits(proto.wgpb.DataSourceConfiguration, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
@@ -2827,33 +2826,6 @@ proto.wgpb.EngineConfiguration.prototype.clearFieldConfigurationsList = function
  */
 proto.wgpb.DataSourceConfiguration.repeatedFields_ = [2,3];
 
-/**
- * Oneof group definitions for this message. Each group defines the field
- * numbers belonging to that group. When of these fields' value is set, all
- * other fields in the group are cleared. During deserialization, if multiple
- * fields are encountered for a group, only the last value seen will be kept.
- * @private {!Array<!Array<number>>}
- * @const
- */
-proto.wgpb.DataSourceConfiguration.oneofGroups_ = [[5,6,7]];
-
-/**
- * @enum {number}
- */
-proto.wgpb.DataSourceConfiguration.CustomConfigurationCase = {
-  CUSTOM_CONFIGURATION_NOT_SET: 0,
-  REST: 5,
-  GRAPHQL: 6,
-  STATIC: 7
-};
-
-/**
- * @return {proto.wgpb.DataSourceConfiguration.CustomConfigurationCase}
- */
-proto.wgpb.DataSourceConfiguration.prototype.getCustomConfigurationCase = function() {
-  return /** @type {proto.wgpb.DataSourceConfiguration.CustomConfigurationCase} */(jspb.Message.computeOneofCase(this, proto.wgpb.DataSourceConfiguration.oneofGroups_[0]));
-};
-
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
@@ -2891,9 +2863,9 @@ proto.wgpb.DataSourceConfiguration.toObject = function(includeInstance, msg) {
     childNodesList: jspb.Message.toObjectList(msg.getChildNodesList(),
     proto.wgpb.TypeField.toObject, includeInstance),
     overrideFieldPathFromAlias: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
-    rest: (f = msg.getRest()) && proto.wgpb.DataSourceCustom_REST.toObject(includeInstance, f),
-    graphql: (f = msg.getGraphql()) && proto.wgpb.DataSourceCustom_GraphQL.toObject(includeInstance, f),
-    pb_static: (f = msg.getStatic()) && proto.wgpb.DataSourceCustom_Static.toObject(includeInstance, f)
+    customRest: (f = msg.getCustomRest()) && proto.wgpb.DataSourceCustom_REST.toObject(includeInstance, f),
+    customGraphql: (f = msg.getCustomGraphql()) && proto.wgpb.DataSourceCustom_GraphQL.toObject(includeInstance, f),
+    customStatic: (f = msg.getCustomStatic()) && proto.wgpb.DataSourceCustom_Static.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2951,17 +2923,17 @@ proto.wgpb.DataSourceConfiguration.deserializeBinaryFromReader = function(msg, r
     case 5:
       var value = new proto.wgpb.DataSourceCustom_REST;
       reader.readMessage(value,proto.wgpb.DataSourceCustom_REST.deserializeBinaryFromReader);
-      msg.setRest(value);
+      msg.setCustomRest(value);
       break;
     case 6:
       var value = new proto.wgpb.DataSourceCustom_GraphQL;
       reader.readMessage(value,proto.wgpb.DataSourceCustom_GraphQL.deserializeBinaryFromReader);
-      msg.setGraphql(value);
+      msg.setCustomGraphql(value);
       break;
     case 7:
       var value = new proto.wgpb.DataSourceCustom_Static;
       reader.readMessage(value,proto.wgpb.DataSourceCustom_Static.deserializeBinaryFromReader);
-      msg.setStatic(value);
+      msg.setCustomStatic(value);
       break;
     default:
       reader.skipField();
@@ -3022,7 +2994,7 @@ proto.wgpb.DataSourceConfiguration.serializeBinaryToWriter = function(message, w
       f
     );
   }
-  f = message.getRest();
+  f = message.getCustomRest();
   if (f != null) {
     writer.writeMessage(
       5,
@@ -3030,7 +3002,7 @@ proto.wgpb.DataSourceConfiguration.serializeBinaryToWriter = function(message, w
       proto.wgpb.DataSourceCustom_REST.serializeBinaryToWriter
     );
   }
-  f = message.getGraphql();
+  f = message.getCustomGraphql();
   if (f != null) {
     writer.writeMessage(
       6,
@@ -3038,7 +3010,7 @@ proto.wgpb.DataSourceConfiguration.serializeBinaryToWriter = function(message, w
       proto.wgpb.DataSourceCustom_GraphQL.serializeBinaryToWriter
     );
   }
-  f = message.getStatic();
+  f = message.getCustomStatic();
   if (f != null) {
     writer.writeMessage(
       7,
@@ -3162,10 +3134,10 @@ proto.wgpb.DataSourceConfiguration.prototype.setOverrideFieldPathFromAlias = fun
 
 
 /**
- * optional DataSourceCustom_REST rest = 5;
+ * optional DataSourceCustom_REST custom_rest = 5;
  * @return {?proto.wgpb.DataSourceCustom_REST}
  */
-proto.wgpb.DataSourceConfiguration.prototype.getRest = function() {
+proto.wgpb.DataSourceConfiguration.prototype.getCustomRest = function() {
   return /** @type{?proto.wgpb.DataSourceCustom_REST} */ (
     jspb.Message.getWrapperField(this, proto.wgpb.DataSourceCustom_REST, 5));
 };
@@ -3175,8 +3147,8 @@ proto.wgpb.DataSourceConfiguration.prototype.getRest = function() {
  * @param {?proto.wgpb.DataSourceCustom_REST|undefined} value
  * @return {!proto.wgpb.DataSourceConfiguration} returns this
 */
-proto.wgpb.DataSourceConfiguration.prototype.setRest = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 5, proto.wgpb.DataSourceConfiguration.oneofGroups_[0], value);
+proto.wgpb.DataSourceConfiguration.prototype.setCustomRest = function(value) {
+  return jspb.Message.setWrapperField(this, 5, value);
 };
 
 
@@ -3184,8 +3156,8 @@ proto.wgpb.DataSourceConfiguration.prototype.setRest = function(value) {
  * Clears the message field making it undefined.
  * @return {!proto.wgpb.DataSourceConfiguration} returns this
  */
-proto.wgpb.DataSourceConfiguration.prototype.clearRest = function() {
-  return this.setRest(undefined);
+proto.wgpb.DataSourceConfiguration.prototype.clearCustomRest = function() {
+  return this.setCustomRest(undefined);
 };
 
 
@@ -3193,16 +3165,16 @@ proto.wgpb.DataSourceConfiguration.prototype.clearRest = function() {
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.wgpb.DataSourceConfiguration.prototype.hasRest = function() {
+proto.wgpb.DataSourceConfiguration.prototype.hasCustomRest = function() {
   return jspb.Message.getField(this, 5) != null;
 };
 
 
 /**
- * optional DataSourceCustom_GraphQL graphql = 6;
+ * optional DataSourceCustom_GraphQL custom_graphql = 6;
  * @return {?proto.wgpb.DataSourceCustom_GraphQL}
  */
-proto.wgpb.DataSourceConfiguration.prototype.getGraphql = function() {
+proto.wgpb.DataSourceConfiguration.prototype.getCustomGraphql = function() {
   return /** @type{?proto.wgpb.DataSourceCustom_GraphQL} */ (
     jspb.Message.getWrapperField(this, proto.wgpb.DataSourceCustom_GraphQL, 6));
 };
@@ -3212,8 +3184,8 @@ proto.wgpb.DataSourceConfiguration.prototype.getGraphql = function() {
  * @param {?proto.wgpb.DataSourceCustom_GraphQL|undefined} value
  * @return {!proto.wgpb.DataSourceConfiguration} returns this
 */
-proto.wgpb.DataSourceConfiguration.prototype.setGraphql = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 6, proto.wgpb.DataSourceConfiguration.oneofGroups_[0], value);
+proto.wgpb.DataSourceConfiguration.prototype.setCustomGraphql = function(value) {
+  return jspb.Message.setWrapperField(this, 6, value);
 };
 
 
@@ -3221,8 +3193,8 @@ proto.wgpb.DataSourceConfiguration.prototype.setGraphql = function(value) {
  * Clears the message field making it undefined.
  * @return {!proto.wgpb.DataSourceConfiguration} returns this
  */
-proto.wgpb.DataSourceConfiguration.prototype.clearGraphql = function() {
-  return this.setGraphql(undefined);
+proto.wgpb.DataSourceConfiguration.prototype.clearCustomGraphql = function() {
+  return this.setCustomGraphql(undefined);
 };
 
 
@@ -3230,16 +3202,16 @@ proto.wgpb.DataSourceConfiguration.prototype.clearGraphql = function() {
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.wgpb.DataSourceConfiguration.prototype.hasGraphql = function() {
+proto.wgpb.DataSourceConfiguration.prototype.hasCustomGraphql = function() {
   return jspb.Message.getField(this, 6) != null;
 };
 
 
 /**
- * optional DataSourceCustom_Static static = 7;
+ * optional DataSourceCustom_Static custom_static = 7;
  * @return {?proto.wgpb.DataSourceCustom_Static}
  */
-proto.wgpb.DataSourceConfiguration.prototype.getStatic = function() {
+proto.wgpb.DataSourceConfiguration.prototype.getCustomStatic = function() {
   return /** @type{?proto.wgpb.DataSourceCustom_Static} */ (
     jspb.Message.getWrapperField(this, proto.wgpb.DataSourceCustom_Static, 7));
 };
@@ -3249,8 +3221,8 @@ proto.wgpb.DataSourceConfiguration.prototype.getStatic = function() {
  * @param {?proto.wgpb.DataSourceCustom_Static|undefined} value
  * @return {!proto.wgpb.DataSourceConfiguration} returns this
 */
-proto.wgpb.DataSourceConfiguration.prototype.setStatic = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 7, proto.wgpb.DataSourceConfiguration.oneofGroups_[0], value);
+proto.wgpb.DataSourceConfiguration.prototype.setCustomStatic = function(value) {
+  return jspb.Message.setWrapperField(this, 7, value);
 };
 
 
@@ -3258,8 +3230,8 @@ proto.wgpb.DataSourceConfiguration.prototype.setStatic = function(value) {
  * Clears the message field making it undefined.
  * @return {!proto.wgpb.DataSourceConfiguration} returns this
  */
-proto.wgpb.DataSourceConfiguration.prototype.clearStatic = function() {
-  return this.setStatic(undefined);
+proto.wgpb.DataSourceConfiguration.prototype.clearCustomStatic = function() {
+  return this.setCustomStatic(undefined);
 };
 
 
@@ -3267,7 +3239,7 @@ proto.wgpb.DataSourceConfiguration.prototype.clearStatic = function() {
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.wgpb.DataSourceConfiguration.prototype.hasStatic = function() {
+proto.wgpb.DataSourceConfiguration.prototype.hasCustomStatic = function() {
   return jspb.Message.getField(this, 7) != null;
 };
 

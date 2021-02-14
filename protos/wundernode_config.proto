@@ -98,11 +98,9 @@ message DataSourceConfiguration {
     repeated TypeField root_nodes = 2;
     repeated TypeField child_nodes = 3;
     bool override_field_path_from_alias = 4;
-    oneof custom_configuration {
-        DataSourceCustom_REST rest = 5;
-        DataSourceCustom_GraphQL graphql = 6;
-        DataSourceCustom_Static static = 7;
-    }
+    DataSourceCustom_REST custom_rest = 5;
+    DataSourceCustom_GraphQL custom_graphql = 6;
+    DataSourceCustom_Static custom_static = 7;
 }
 
 enum DataSourceKind {

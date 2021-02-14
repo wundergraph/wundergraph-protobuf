@@ -335,22 +335,21 @@ export class DataSourceConfiguration extends jspb.Message {
   getOverrideFieldPathFromAlias(): boolean;
   setOverrideFieldPathFromAlias(value: boolean): void;
 
-  hasRest(): boolean;
-  clearRest(): void;
-  getRest(): DataSourceCustom_REST | undefined;
-  setRest(value?: DataSourceCustom_REST): void;
+  hasCustomRest(): boolean;
+  clearCustomRest(): void;
+  getCustomRest(): DataSourceCustom_REST | undefined;
+  setCustomRest(value?: DataSourceCustom_REST): void;
 
-  hasGraphql(): boolean;
-  clearGraphql(): void;
-  getGraphql(): DataSourceCustom_GraphQL | undefined;
-  setGraphql(value?: DataSourceCustom_GraphQL): void;
+  hasCustomGraphql(): boolean;
+  clearCustomGraphql(): void;
+  getCustomGraphql(): DataSourceCustom_GraphQL | undefined;
+  setCustomGraphql(value?: DataSourceCustom_GraphQL): void;
 
-  hasStatic(): boolean;
-  clearStatic(): void;
-  getStatic(): DataSourceCustom_Static | undefined;
-  setStatic(value?: DataSourceCustom_Static): void;
+  hasCustomStatic(): boolean;
+  clearCustomStatic(): void;
+  getCustomStatic(): DataSourceCustom_Static | undefined;
+  setCustomStatic(value?: DataSourceCustom_Static): void;
 
-  getCustomConfigurationCase(): DataSourceConfiguration.CustomConfigurationCase;
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): DataSourceConfiguration.AsObject;
   static toObject(includeInstance: boolean, msg: DataSourceConfiguration): DataSourceConfiguration.AsObject;
@@ -367,16 +366,9 @@ export namespace DataSourceConfiguration {
     rootNodesList: Array<TypeField.AsObject>,
     childNodesList: Array<TypeField.AsObject>,
     overrideFieldPathFromAlias: boolean,
-    rest?: DataSourceCustom_REST.AsObject,
-    graphql?: DataSourceCustom_GraphQL.AsObject,
-    pb_static?: DataSourceCustom_Static.AsObject,
-  }
-
-  export enum CustomConfigurationCase {
-    CUSTOM_CONFIGURATION_NOT_SET = 0,
-    REST = 5,
-    GRAPHQL = 6,
-    STATIC = 7,
+    customRest?: DataSourceCustom_REST.AsObject,
+    customGraphql?: DataSourceCustom_GraphQL.AsObject,
+    customStatic?: DataSourceCustom_Static.AsObject,
   }
 }
 
