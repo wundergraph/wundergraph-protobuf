@@ -5,20 +5,19 @@ import "google/protobuf/duration.proto";
 
 option go_package = "wgpb";
 
-message Config {
+message WunderNodeConfig {
     Server server = 1;
     Logging logging = 2;
     repeated Api apis = 3;
 }
 
 message Server {
-    string listen_addr = 1;
-    repeated Host hosts = 2;
-    google.protobuf.Duration graceful_shutdown_timeout = 3;
-    google.protobuf.Duration keep_alive = 4;
-    google.protobuf.Duration read_timeout = 5;
-    google.protobuf.Duration write_timeout = 6;
-    google.protobuf.Duration idle_timeout = 7;
+    repeated Host hosts = 1;
+    google.protobuf.Duration graceful_shutdown_timeout = 2;
+    google.protobuf.Duration keep_alive = 3;
+    google.protobuf.Duration read_timeout = 4;
+    google.protobuf.Duration write_timeout = 5;
+    google.protobuf.Duration idle_timeout = 6;
 }
 
 message Host {

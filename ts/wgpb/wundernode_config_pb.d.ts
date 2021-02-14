@@ -4,7 +4,7 @@
 import * as jspb from "google-protobuf";
 import * as google_protobuf_duration_pb from "google-protobuf/google/protobuf/duration_pb";
 
-export class Config extends jspb.Message {
+export class WunderNodeConfig extends jspb.Message {
   hasServer(): boolean;
   clearServer(): void;
   getServer(): Server | undefined;
@@ -21,16 +21,16 @@ export class Config extends jspb.Message {
   addApis(value?: Api, index?: number): Api;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): Config.AsObject;
-  static toObject(includeInstance: boolean, msg: Config): Config.AsObject;
+  toObject(includeInstance?: boolean): WunderNodeConfig.AsObject;
+  static toObject(includeInstance: boolean, msg: WunderNodeConfig): WunderNodeConfig.AsObject;
   static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
   static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: Config, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): Config;
-  static deserializeBinaryFromReader(message: Config, reader: jspb.BinaryReader): Config;
+  static serializeBinaryToWriter(message: WunderNodeConfig, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): WunderNodeConfig;
+  static deserializeBinaryFromReader(message: WunderNodeConfig, reader: jspb.BinaryReader): WunderNodeConfig;
 }
 
-export namespace Config {
+export namespace WunderNodeConfig {
   export type AsObject = {
     server?: Server.AsObject,
     logging?: Logging.AsObject,
@@ -39,9 +39,6 @@ export namespace Config {
 }
 
 export class Server extends jspb.Message {
-  getListenAddr(): string;
-  setListenAddr(value: string): void;
-
   clearHostsList(): void;
   getHostsList(): Array<Host>;
   setHostsList(value: Array<Host>): void;
@@ -84,7 +81,6 @@ export class Server extends jspb.Message {
 
 export namespace Server {
   export type AsObject = {
-    listenAddr: string,
     hostsList: Array<Host.AsObject>,
     gracefulShutdownTimeout?: google_protobuf_duration_pb.Duration.AsObject,
     keepAlive?: google_protobuf_duration_pb.Duration.AsObject,
