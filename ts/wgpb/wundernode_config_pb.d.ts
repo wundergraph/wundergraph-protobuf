@@ -39,11 +39,6 @@ export namespace WunderNodeConfig {
 }
 
 export class Server extends jspb.Message {
-  clearHostsList(): void;
-  getHostsList(): Array<Host>;
-  setHostsList(value: Array<Host>): void;
-  addHosts(value?: Host, index?: number): Host;
-
   hasGracefulShutdownTimeout(): boolean;
   clearGracefulShutdownTimeout(): void;
   getGracefulShutdownTimeout(): google_protobuf_duration_pb.Duration | undefined;
@@ -69,6 +64,11 @@ export class Server extends jspb.Message {
   getIdleTimeout(): google_protobuf_duration_pb.Duration | undefined;
   setIdleTimeout(value?: google_protobuf_duration_pb.Duration): void;
 
+  clearCertificatesList(): void;
+  getCertificatesList(): Array<Certificate>;
+  setCertificatesList(value: Array<Certificate>): void;
+  addCertificates(value?: Certificate, index?: number): Certificate;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Server.AsObject;
   static toObject(includeInstance: boolean, msg: Server): Server.AsObject;
@@ -81,19 +81,16 @@ export class Server extends jspb.Message {
 
 export namespace Server {
   export type AsObject = {
-    hostsList: Array<Host.AsObject>,
     gracefulShutdownTimeout?: google_protobuf_duration_pb.Duration.AsObject,
     keepAlive?: google_protobuf_duration_pb.Duration.AsObject,
     readTimeout?: google_protobuf_duration_pb.Duration.AsObject,
     writeTimeout?: google_protobuf_duration_pb.Duration.AsObject,
     idleTimeout?: google_protobuf_duration_pb.Duration.AsObject,
+    certificatesList: Array<Certificate.AsObject>,
   }
 }
 
-export class Host extends jspb.Message {
-  getName(): string;
-  setName(value: string): void;
-
+export class Certificate extends jspb.Message {
   getKeyPem(): string;
   setKeyPem(value: string): void;
 
@@ -101,18 +98,17 @@ export class Host extends jspb.Message {
   setCertPem(value: string): void;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): Host.AsObject;
-  static toObject(includeInstance: boolean, msg: Host): Host.AsObject;
+  toObject(includeInstance?: boolean): Certificate.AsObject;
+  static toObject(includeInstance: boolean, msg: Certificate): Certificate.AsObject;
   static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
   static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: Host, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): Host;
-  static deserializeBinaryFromReader(message: Host, reader: jspb.BinaryReader): Host;
+  static serializeBinaryToWriter(message: Certificate, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): Certificate;
+  static deserializeBinaryFromReader(message: Certificate, reader: jspb.BinaryReader): Certificate;
 }
 
-export namespace Host {
+export namespace Certificate {
   export type AsObject = {
-    name: string,
     keyPem: string,
     certPem: string,
   }
@@ -139,8 +135,13 @@ export namespace Logging {
 }
 
 export class Api extends jspb.Message {
-  getName(): string;
-  setName(value: string): void;
+  clearHostsList(): void;
+  getHostsList(): Array<string>;
+  setHostsList(value: Array<string>): void;
+  addHosts(value: string, index?: number): string;
+
+  getPathPrefix(): string;
+  setPathPrefix(value: string): void;
 
   hasEngineConfiguration(): boolean;
   clearEngineConfiguration(): void;
@@ -170,7 +171,8 @@ export class Api extends jspb.Message {
 
 export namespace Api {
   export type AsObject = {
-    name: string,
+    hostsList: Array<string>,
+    pathPrefix: string,
     engineConfiguration?: EngineConfiguration.AsObject,
     enableSingleFlight: boolean,
     enableGraphqlEndpoint: boolean,
@@ -415,6 +417,11 @@ export class DataSourceCustom_GraphQL extends jspb.Message {
   getSubscription(): GraphQLSubscriptionConfiguration | undefined;
   setSubscription(value?: GraphQLSubscriptionConfiguration): void;
 
+  hasFederation(): boolean;
+  clearFederation(): void;
+  getFederation(): GraphQLFederationConfiguration | undefined;
+  setFederation(value?: GraphQLFederationConfiguration): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): DataSourceCustom_GraphQL.AsObject;
   static toObject(includeInstance: boolean, msg: DataSourceCustom_GraphQL): DataSourceCustom_GraphQL.AsObject;
@@ -429,6 +436,31 @@ export namespace DataSourceCustom_GraphQL {
   export type AsObject = {
     fetch?: FetchConfiguration.AsObject,
     subscription?: GraphQLSubscriptionConfiguration.AsObject,
+    federation?: GraphQLFederationConfiguration.AsObject,
+  }
+}
+
+export class GraphQLFederationConfiguration extends jspb.Message {
+  getEnabled(): boolean;
+  setEnabled(value: boolean): void;
+
+  getServiceSdl(): string;
+  setServiceSdl(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GraphQLFederationConfiguration.AsObject;
+  static toObject(includeInstance: boolean, msg: GraphQLFederationConfiguration): GraphQLFederationConfiguration.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: GraphQLFederationConfiguration, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GraphQLFederationConfiguration;
+  static deserializeBinaryFromReader(message: GraphQLFederationConfiguration, reader: jspb.BinaryReader): GraphQLFederationConfiguration;
+}
+
+export namespace GraphQLFederationConfiguration {
+  export type AsObject = {
+    enabled: boolean,
+    serviceSdl: string,
   }
 }
 
@@ -682,6 +714,64 @@ export namespace ArgumentConfiguration {
     name: string,
     sourceType: ArgumentSourceMap[keyof ArgumentSourceMap],
     sourcePathList: Array<string>,
+  }
+}
+
+export class DataUsageMetric extends jspb.Message {
+  getHost(): string;
+  setHost(value: string): void;
+
+  getInboundReadBytes(): number;
+  setInboundReadBytes(value: number): void;
+
+  getInboundWriteBytes(): number;
+  setInboundWriteBytes(value: number): void;
+
+  getOutboundReadBytes(): number;
+  setOutboundReadBytes(value: number): void;
+
+  getOutboundWriteBytes(): number;
+  setOutboundWriteBytes(value: number): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): DataUsageMetric.AsObject;
+  static toObject(includeInstance: boolean, msg: DataUsageMetric): DataUsageMetric.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: DataUsageMetric, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): DataUsageMetric;
+  static deserializeBinaryFromReader(message: DataUsageMetric, reader: jspb.BinaryReader): DataUsageMetric;
+}
+
+export namespace DataUsageMetric {
+  export type AsObject = {
+    host: string,
+    inboundReadBytes: number,
+    inboundWriteBytes: number,
+    outboundReadBytes: number,
+    outboundWriteBytes: number,
+  }
+}
+
+export class WunderNodeMetrics extends jspb.Message {
+  clearDataUsageList(): void;
+  getDataUsageList(): Array<DataUsageMetric>;
+  setDataUsageList(value: Array<DataUsageMetric>): void;
+  addDataUsage(value?: DataUsageMetric, index?: number): DataUsageMetric;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): WunderNodeMetrics.AsObject;
+  static toObject(includeInstance: boolean, msg: WunderNodeMetrics): WunderNodeMetrics.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: WunderNodeMetrics, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): WunderNodeMetrics;
+  static deserializeBinaryFromReader(message: WunderNodeMetrics, reader: jspb.BinaryReader): WunderNodeMetrics;
+}
+
+export namespace WunderNodeMetrics {
+  export type AsObject = {
+    dataUsageList: Array<DataUsageMetric.AsObject>,
   }
 }
 

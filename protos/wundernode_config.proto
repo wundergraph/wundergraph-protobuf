@@ -12,16 +12,15 @@ message WunderNodeConfig {
 }
 
 message Server {
-    repeated Host hosts = 1;
-    google.protobuf.Duration graceful_shutdown_timeout = 2;
-    google.protobuf.Duration keep_alive = 3;
-    google.protobuf.Duration read_timeout = 4;
-    google.protobuf.Duration write_timeout = 5;
-    google.protobuf.Duration idle_timeout = 6;
+    google.protobuf.Duration graceful_shutdown_timeout = 1;
+    google.protobuf.Duration keep_alive = 2;
+    google.protobuf.Duration read_timeout = 3;
+    google.protobuf.Duration write_timeout = 4;
+    google.protobuf.Duration idle_timeout = 5;
+    repeated Certificate certificates = 6;
 }
 
-message Host {
-    string name = 1;
+message Certificate {
     string key_pem = 2;
     string cert_pem = 3;
 }
@@ -41,11 +40,12 @@ enum LogLevel {
 }
 
 message Api {
-    string name = 1;
-    EngineConfiguration engine_configuration = 2;
-    bool enable_single_flight = 3;
-    bool enable_graphql_endpoint = 4;
-    repeated Operation operations = 5;
+    repeated string hosts = 1;
+    string path_prefix = 2;
+    EngineConfiguration engine_configuration = 3;
+    bool enable_single_flight = 4;
+    bool enable_graphql_endpoint = 5;
+    repeated Operation operations = 6;
 }
 
 message Operation {
@@ -119,6 +119,12 @@ message DataSourceCustom_REST {
 message DataSourceCustom_GraphQL {
     FetchConfiguration fetch = 1;
     GraphQLSubscriptionConfiguration subscription = 2;
+    GraphQLFederationConfiguration federation = 3;
+}
+
+message GraphQLFederationConfiguration {
+    bool enabled = 1;
+    string service_sdl = 2;
 }
 
 message DataSourceCustom_Static {
@@ -184,4 +190,16 @@ message ArgumentConfiguration {
     string name = 1;
     ArgumentSource source_type = 2;
     repeated string source_path = 3;
+}
+
+message DataUsageMetric {
+    string host = 1;
+    int64 inbound_read_bytes = 2;
+    int64 inbound_write_bytes = 3;
+    int64 outbound_read_bytes = 4;
+    int64 outbound_write_bytes = 5;
+}
+
+message WunderNodeMetrics {
+    repeated DataUsageMetric data_usage = 1;
 }
