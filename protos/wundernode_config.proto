@@ -12,17 +12,17 @@ message WunderNodeConfig {
 }
 
 message Server {
-    google.protobuf.Duration graceful_shutdown_timeout = 1;
-    google.protobuf.Duration keep_alive = 2;
-    google.protobuf.Duration read_timeout = 3;
-    google.protobuf.Duration write_timeout = 4;
-    google.protobuf.Duration idle_timeout = 5;
+    google.protobuf.Duration gracefulShutdownTimeout = 1;
+    google.protobuf.Duration keepAlive = 2;
+    google.protobuf.Duration readTimeout = 3;
+    google.protobuf.Duration writeTimeout = 4;
+    google.protobuf.Duration idleTimeout = 5;
     repeated Certificate certificates = 6;
 }
 
 message Certificate {
-    string key_pem = 2;
-    string cert_pem = 3;
+    string keyPem = 2;
+    string certPem = 3;
 }
 
 message Logging {
@@ -30,85 +30,65 @@ message Logging {
 }
 
 enum LogLevel {
-    LogLevel_UNDEFINED = 0;
-    DEBUG = 1;
-    INFO = 2;
-    ERROR = 3;
-    WARNING = 4;
-    PANIC = 5;
-    FATAL = 6;
+    DEBUG = 0;
+    INFO = 1;
+    ERROR = 2;
+    WARNING = 3;
+    PANIC = 4;
+    FATAL = 5;
 }
 
 message Api {
     repeated string hosts = 1;
-    string path_prefix = 2;
-    EngineConfiguration engine_configuration = 3;
-    bool enable_single_flight = 4;
-    bool enable_graphql_endpoint = 5;
+    string pathPrefix = 2;
+    EngineConfiguration engineConfiguration = 3;
+    bool enableSingleFlight = 4;
+    bool enableGraphqlEndpoint = 5;
     repeated Operation operations = 6;
 }
 
 message Operation {
     string name = 1;
     string content = 2;
-    OperationType operation_type = 3;
-    JSONSchema variables_schema = 4;
-    JSONSchema response_schema = 5;
+    OperationType operationType = 3;
+    string variablesSchema = 4;
+    string responseSchema = 5;
+    OperationMock mock = 6;
+}
+
+message OperationMock {
+    bool enabled = 1;
+    string endpoint = 2;
+    int64 subscriptionPollingIntervalMillis = 3;
 }
 
 enum OperationType {
-    OperationType_UNDEFINED = 0;
-    QUERY = 1;
-    MUTATION = 2;
-    SUBSCRIPTION = 3;
-}
-
-message JSONSchema {
-    JSONSchemaType type = 1;
-    repeated JSONSchemaProperty properties = 2;
-    JSONSchema items = 3;
-    repeated string required = 4;
-    bool additional_properties = 5;
-}
-
-message JSONSchemaProperty {
-    string name = 1;
-    JSONSchema schema = 2;
-}
-
-enum JSONSchemaType {
-    JSONSchemaType_UNDEFINED = 0;
-    STRING = 1;
-    INTEGER = 2;
-    NUMBER = 3;
-    OBJECT = 4;
-    ARRAY = 5;
-    BOOLEAN = 6;
-    NULL = 7;
+    QUERY = 0;
+    MUTATION = 1;
+    SUBSCRIPTION = 2;
 }
 
 message EngineConfiguration {
-    int64 default_flush_interval = 1;
-    repeated DataSourceConfiguration datasource_configurations = 2;
-    repeated FieldConfiguration field_configurations = 3;
-    string graphql_schema = 4;
+    int64 defaultFlushInterval = 1;
+    repeated DataSourceConfiguration datasourceConfigurations = 2;
+    repeated FieldConfiguration fieldConfigurations = 3;
+    string graphqlSchema = 4;
 }
 
 message DataSourceConfiguration {
     DataSourceKind kind = 1;
-    repeated TypeField root_nodes = 2;
-    repeated TypeField child_nodes = 3;
-    bool override_field_path_from_alias = 4;
-    DataSourceCustom_REST custom_rest = 5;
-    DataSourceCustom_GraphQL custom_graphql = 6;
-    DataSourceCustom_Static custom_static = 7;
+    repeated TypeField rootNodes = 2;
+    repeated TypeField childNodes = 3;
+    bool overrideFieldPathFromAlias = 4;
+    DataSourceCustom_REST customRest = 5;
+    DataSourceCustom_GraphQL customGraphql = 6;
+    DataSourceCustom_Static customStatic = 7;
 }
 
 enum DataSourceKind {
-    DataSourceKind_UNDEFINED = 0;
-    STATIC = 1;
-    REST = 2;
-    GRAPHQL = 3;
+    STATIC = 0;
+    REST = 1;
+    GRAPHQL = 2;
 }
 
 message DataSourceCustom_REST {
@@ -124,7 +104,7 @@ message DataSourceCustom_GraphQL {
 
 message GraphQLFederationConfiguration {
     bool enabled = 1;
-    string service_sdl = 2;
+    string serviceSdl = 2;
 }
 
 message DataSourceCustom_Static {
@@ -132,11 +112,12 @@ message DataSourceCustom_Static {
 }
 
 message GraphQLSubscriptionConfiguration {
-    string URL = 1;
+    bool enabled = 1;
+    string url = 2;
 }
 
 message FetchConfiguration {
-    string URL = 1;
+    string url = 1;
     HTTPMethod method = 2;
     map<string, HTTPHeader> header = 3;
     string body = 4;
@@ -144,8 +125,9 @@ message FetchConfiguration {
 }
 
 message RESTSubscriptionConfiguration {
-    int64 polling_interval_millis = 1;
-    bool skip_publish_same_response = 2;
+    bool enabled = 1;
+    int64 pollingIntervalMillis = 2;
+    bool skipPublishSameResponse = 3;
 }
 
 message URLQueryConfiguration {
@@ -158,48 +140,57 @@ message HTTPHeader {
 }
 
 enum HTTPMethod {
-    HTTPMethod_UNDEFINED = 0;
-    GET = 1;
-    POST = 3;
-    PUT = 4;
-    DELETE = 5;
+    GET = 0;
+    POST = 1;
+    PUT = 2;
+    DELETE = 3;
 }
 
 message FieldConfiguration {
-    string type_name = 1;
-    string field_name = 2;
-    bool disable_default_field_mapping = 3;
+    string typeName = 1;
+    string fieldName = 2;
+    bool disableDefaultFieldMapping = 3;
     repeated string path = 4;
-    bool respect_override_field_path_from_alias = 5;
-    repeated ArgumentConfiguration arguments_configuration = 6;
-    repeated string requires_fields = 7;
+    bool respectOverrideFieldPathFromAlias = 5;
+    repeated ArgumentConfiguration argumentsConfiguration = 6;
+    repeated string requiresFields = 7;
 }
 
 message TypeField {
-    string type_name = 1;
-    repeated string field_names = 2;
+    string typeName = 1;
+    repeated string fieldNames = 2;
 }
 
 enum ArgumentSource {
-    ArgumentSource_UNDEFINED = 0;
-    OBJECT_FIELD = 1;
-    FIELD_ARGUMENT = 2;
+    OBJECT_FIELD = 0;
+    FIELD_ARGUMENT = 1;
 }
 
 message ArgumentConfiguration {
     string name = 1;
-    ArgumentSource source_type = 2;
-    repeated string source_path = 3;
+    ArgumentSource sourceType = 2;
+    repeated string sourcePath = 3;
 }
 
 message DataUsageMetric {
     string host = 1;
-    int64 inbound_read_bytes = 2;
-    int64 inbound_write_bytes = 3;
-    int64 outbound_read_bytes = 4;
-    int64 outbound_write_bytes = 5;
+    int64 inboundReadBytes = 2;
+    int64 inboundWriteBytes = 3;
+    int64 outboundReadBytes = 4;
+    int64 outboundWriteBytes = 5;
 }
 
 message WunderNodeMetrics {
-    repeated DataUsageMetric data_usage = 1;
+    repeated DataUsageMetric dataUsage = 1;
+}
+
+message WunderGraphConfiguration {
+    UserDefinedApi api = 1;
+}
+
+message UserDefinedApi {
+    string name = 2;
+    EngineConfiguration engineConfiguration = 3;
+    bool enableGraphqlEndpoint = 5;
+    repeated Operation operations = 6;
 }
