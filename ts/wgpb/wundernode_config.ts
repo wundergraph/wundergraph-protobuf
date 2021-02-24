@@ -239,6 +239,7 @@ export interface Api {
   enableSingleFlight: boolean;
   enableGraphqlEndpoint: boolean;
   operations: Operation[];
+  corsConfiguration: CorsConfiguration | undefined;
 }
 
 export interface Operation {
@@ -368,6 +369,46 @@ export interface UserDefinedApi {
   engineConfiguration: EngineConfiguration | undefined;
   enableGraphqlEndpoint: boolean;
   operations: Operation[];
+  corsConfiguration: CorsConfiguration | undefined;
+}
+
+export interface CorsConfiguration {
+  /**
+   * AllowedOrigins is a list of origins a cross-domain request can be executed from.
+   * If the special "*" value is present in the list, all origins will be allowed.
+   * An origin may contain a wildcard (*) to replace 0 or more characters
+   * (i.e.: http://*.domain.com). Usage of wildcards implies a small performance penalty.
+   * Only one wildcard can be used per origin.
+   * Default value is ["*"]
+   */
+  allowedOrigins: string[];
+  /**
+   * AllowedMethods is a list of methods the client is allowed to use with
+   * cross-domain requests. Default value is simple methods (HEAD, GET and POST).
+   */
+  allowedMethods: string[];
+  /**
+   * AllowedHeaders is list of non simple headers the client is allowed to use with
+   * cross-domain requests.
+   * If the special "*" value is present in the list, all headers will be allowed.
+   * Default value is [] but "Origin" is always appended to the list.
+   */
+  allowedHeaders: string[];
+  /**
+   * ExposedHeaders indicates which headers are safe to expose to the API of a CORS
+   * API specification
+   */
+  exposedHeaders: string[];
+  /**
+   * MaxAge indicates how long (in seconds) the results of a preflight request
+   * can be cached
+   */
+  maxAge: number;
+  /**
+   * AllowCredentials indicates whether the request can include user credentials like
+   * cookies, HTTP authentication or client side SSL certificates.
+   */
+  allowCredentials: boolean;
 }
 
 const baseWunderNodeConfig: object = {};
@@ -813,6 +854,12 @@ export const Api = {
     for (const v of message.operations) {
       Operation.encode(v!, writer.uint32(50).fork()).ldelim();
     }
+    if (message.corsConfiguration !== undefined) {
+      CorsConfiguration.encode(
+        message.corsConfiguration,
+        writer.uint32(58).fork()
+      ).ldelim();
+    }
     return writer;
   },
 
@@ -845,6 +892,12 @@ export const Api = {
           break;
         case 6:
           message.operations.push(Operation.decode(reader, reader.uint32()));
+          break;
+        case 7:
+          message.corsConfiguration = CorsConfiguration.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         default:
           reader.skipType(tag & 7);
@@ -899,6 +952,16 @@ export const Api = {
         message.operations.push(Operation.fromJSON(e));
       }
     }
+    if (
+      object.corsConfiguration !== undefined &&
+      object.corsConfiguration !== null
+    ) {
+      message.corsConfiguration = CorsConfiguration.fromJSON(
+        object.corsConfiguration
+      );
+    } else {
+      message.corsConfiguration = undefined;
+    }
     return message;
   },
 
@@ -947,6 +1010,16 @@ export const Api = {
         message.operations.push(Operation.fromPartial(e));
       }
     }
+    if (
+      object.corsConfiguration !== undefined &&
+      object.corsConfiguration !== null
+    ) {
+      message.corsConfiguration = CorsConfiguration.fromPartial(
+        object.corsConfiguration
+      );
+    } else {
+      message.corsConfiguration = undefined;
+    }
     return message;
   },
 
@@ -973,6 +1046,10 @@ export const Api = {
     } else {
       obj.operations = [];
     }
+    message.corsConfiguration !== undefined &&
+      (obj.corsConfiguration = message.corsConfiguration
+        ? CorsConfiguration.toJSON(message.corsConfiguration)
+        : undefined);
     return obj;
   },
 };
@@ -3360,6 +3437,12 @@ export const UserDefinedApi = {
     for (const v of message.operations) {
       Operation.encode(v!, writer.uint32(50).fork()).ldelim();
     }
+    if (message.corsConfiguration !== undefined) {
+      CorsConfiguration.encode(
+        message.corsConfiguration,
+        writer.uint32(58).fork()
+      ).ldelim();
+    }
     return writer;
   },
 
@@ -3387,6 +3470,12 @@ export const UserDefinedApi = {
           break;
         case 6:
           message.operations.push(Operation.decode(reader, reader.uint32()));
+          break;
+        case 7:
+          message.corsConfiguration = CorsConfiguration.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         default:
           reader.skipType(tag & 7);
@@ -3429,6 +3518,16 @@ export const UserDefinedApi = {
         message.operations.push(Operation.fromJSON(e));
       }
     }
+    if (
+      object.corsConfiguration !== undefined &&
+      object.corsConfiguration !== null
+    ) {
+      message.corsConfiguration = CorsConfiguration.fromJSON(
+        object.corsConfiguration
+      );
+    } else {
+      message.corsConfiguration = undefined;
+    }
     return message;
   },
 
@@ -3463,6 +3562,16 @@ export const UserDefinedApi = {
         message.operations.push(Operation.fromPartial(e));
       }
     }
+    if (
+      object.corsConfiguration !== undefined &&
+      object.corsConfiguration !== null
+    ) {
+      message.corsConfiguration = CorsConfiguration.fromPartial(
+        object.corsConfiguration
+      );
+    } else {
+      message.corsConfiguration = undefined;
+    }
     return message;
   },
 
@@ -3482,6 +3591,196 @@ export const UserDefinedApi = {
     } else {
       obj.operations = [];
     }
+    message.corsConfiguration !== undefined &&
+      (obj.corsConfiguration = message.corsConfiguration
+        ? CorsConfiguration.toJSON(message.corsConfiguration)
+        : undefined);
+    return obj;
+  },
+};
+
+const baseCorsConfiguration: object = {
+  allowedOrigins: "",
+  allowedMethods: "",
+  allowedHeaders: "",
+  exposedHeaders: "",
+  maxAge: 0,
+  allowCredentials: false,
+};
+
+export const CorsConfiguration = {
+  encode(message: CorsConfiguration, writer: Writer = Writer.create()): Writer {
+    for (const v of message.allowedOrigins) {
+      writer.uint32(10).string(v!);
+    }
+    for (const v of message.allowedMethods) {
+      writer.uint32(18).string(v!);
+    }
+    for (const v of message.allowedHeaders) {
+      writer.uint32(26).string(v!);
+    }
+    for (const v of message.exposedHeaders) {
+      writer.uint32(34).string(v!);
+    }
+    if (message.maxAge !== 0) {
+      writer.uint32(40).int64(message.maxAge);
+    }
+    if (message.allowCredentials === true) {
+      writer.uint32(48).bool(message.allowCredentials);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): CorsConfiguration {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = globalThis.Object.create(
+      baseCorsConfiguration
+    ) as CorsConfiguration;
+    message.allowedOrigins = [];
+    message.allowedMethods = [];
+    message.allowedHeaders = [];
+    message.exposedHeaders = [];
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.allowedOrigins.push(reader.string());
+          break;
+        case 2:
+          message.allowedMethods.push(reader.string());
+          break;
+        case 3:
+          message.allowedHeaders.push(reader.string());
+          break;
+        case 4:
+          message.exposedHeaders.push(reader.string());
+          break;
+        case 5:
+          message.maxAge = longToNumber(reader.int64() as Long);
+          break;
+        case 6:
+          message.allowCredentials = reader.bool();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): CorsConfiguration {
+    const message = globalThis.Object.create(
+      baseCorsConfiguration
+    ) as CorsConfiguration;
+    message.allowedOrigins = [];
+    message.allowedMethods = [];
+    message.allowedHeaders = [];
+    message.exposedHeaders = [];
+    if (object.allowedOrigins !== undefined && object.allowedOrigins !== null) {
+      for (const e of object.allowedOrigins) {
+        message.allowedOrigins.push(String(e));
+      }
+    }
+    if (object.allowedMethods !== undefined && object.allowedMethods !== null) {
+      for (const e of object.allowedMethods) {
+        message.allowedMethods.push(String(e));
+      }
+    }
+    if (object.allowedHeaders !== undefined && object.allowedHeaders !== null) {
+      for (const e of object.allowedHeaders) {
+        message.allowedHeaders.push(String(e));
+      }
+    }
+    if (object.exposedHeaders !== undefined && object.exposedHeaders !== null) {
+      for (const e of object.exposedHeaders) {
+        message.exposedHeaders.push(String(e));
+      }
+    }
+    if (object.maxAge !== undefined && object.maxAge !== null) {
+      message.maxAge = Number(object.maxAge);
+    } else {
+      message.maxAge = 0;
+    }
+    if (
+      object.allowCredentials !== undefined &&
+      object.allowCredentials !== null
+    ) {
+      message.allowCredentials = Boolean(object.allowCredentials);
+    } else {
+      message.allowCredentials = false;
+    }
+    return message;
+  },
+
+  fromPartial(object: DeepPartial<CorsConfiguration>): CorsConfiguration {
+    const message = { ...baseCorsConfiguration } as CorsConfiguration;
+    message.allowedOrigins = [];
+    message.allowedMethods = [];
+    message.allowedHeaders = [];
+    message.exposedHeaders = [];
+    if (object.allowedOrigins !== undefined && object.allowedOrigins !== null) {
+      for (const e of object.allowedOrigins) {
+        message.allowedOrigins.push(e);
+      }
+    }
+    if (object.allowedMethods !== undefined && object.allowedMethods !== null) {
+      for (const e of object.allowedMethods) {
+        message.allowedMethods.push(e);
+      }
+    }
+    if (object.allowedHeaders !== undefined && object.allowedHeaders !== null) {
+      for (const e of object.allowedHeaders) {
+        message.allowedHeaders.push(e);
+      }
+    }
+    if (object.exposedHeaders !== undefined && object.exposedHeaders !== null) {
+      for (const e of object.exposedHeaders) {
+        message.exposedHeaders.push(e);
+      }
+    }
+    if (object.maxAge !== undefined && object.maxAge !== null) {
+      message.maxAge = object.maxAge;
+    } else {
+      message.maxAge = 0;
+    }
+    if (
+      object.allowCredentials !== undefined &&
+      object.allowCredentials !== null
+    ) {
+      message.allowCredentials = object.allowCredentials;
+    } else {
+      message.allowCredentials = false;
+    }
+    return message;
+  },
+
+  toJSON(message: CorsConfiguration): unknown {
+    const obj: any = {};
+    if (message.allowedOrigins) {
+      obj.allowedOrigins = message.allowedOrigins.map((e) => e);
+    } else {
+      obj.allowedOrigins = [];
+    }
+    if (message.allowedMethods) {
+      obj.allowedMethods = message.allowedMethods.map((e) => e);
+    } else {
+      obj.allowedMethods = [];
+    }
+    if (message.allowedHeaders) {
+      obj.allowedHeaders = message.allowedHeaders.map((e) => e);
+    } else {
+      obj.allowedHeaders = [];
+    }
+    if (message.exposedHeaders) {
+      obj.exposedHeaders = message.exposedHeaders.map((e) => e);
+    } else {
+      obj.exposedHeaders = [];
+    }
+    message.maxAge !== undefined && (obj.maxAge = message.maxAge);
+    message.allowCredentials !== undefined &&
+      (obj.allowCredentials = message.allowCredentials);
     return obj;
   },
 };

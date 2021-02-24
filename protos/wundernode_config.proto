@@ -45,6 +45,7 @@ message Api {
     bool enableSingleFlight = 4;
     bool enableGraphqlEndpoint = 5;
     repeated Operation operations = 6;
+    CorsConfiguration corsConfiguration = 7;
 }
 
 message Operation {
@@ -193,4 +194,32 @@ message UserDefinedApi {
     EngineConfiguration engineConfiguration = 3;
     bool enableGraphqlEndpoint = 5;
     repeated Operation operations = 6;
+    CorsConfiguration corsConfiguration = 7;
+}
+
+message CorsConfiguration {
+    // AllowedOrigins is a list of origins a cross-domain request can be executed from.
+    // If the special "*" value is present in the list, all origins will be allowed.
+    // An origin may contain a wildcard (*) to replace 0 or more characters
+    // (i.e.: http://*.domain.com). Usage of wildcards implies a small performance penalty.
+    // Only one wildcard can be used per origin.
+    // Default value is ["*"]
+    repeated string allowedOrigins = 1;
+    // AllowedMethods is a list of methods the client is allowed to use with
+    // cross-domain requests. Default value is simple methods (HEAD, GET and POST).
+    repeated string allowedMethods = 2;
+    // AllowedHeaders is list of non simple headers the client is allowed to use with
+    // cross-domain requests.
+    // If the special "*" value is present in the list, all headers will be allowed.
+    // Default value is [] but "Origin" is always appended to the list.
+    repeated string allowedHeaders = 3;
+    // ExposedHeaders indicates which headers are safe to expose to the API of a CORS
+    // API specification
+    repeated string exposedHeaders = 4;
+    // MaxAge indicates how long (in seconds) the results of a preflight request
+    // can be cached
+    int64 maxAge = 5;
+    // AllowCredentials indicates whether the request can include user credentials like
+    // cookies, HTTP authentication or client side SSL certificates.
+    bool allowCredentials = 6;
 }

@@ -66,6 +66,7 @@ export interface Api {
     enableSingleFlight: boolean;
     enableGraphqlEndpoint: boolean;
     operations: Operation[];
+    corsConfiguration: CorsConfiguration | undefined;
 }
 export interface Operation {
     name: string;
@@ -176,6 +177,45 @@ export interface UserDefinedApi {
     engineConfiguration: EngineConfiguration | undefined;
     enableGraphqlEndpoint: boolean;
     operations: Operation[];
+    corsConfiguration: CorsConfiguration | undefined;
+}
+export interface CorsConfiguration {
+    /**
+     * AllowedOrigins is a list of origins a cross-domain request can be executed from.
+     * If the special "*" value is present in the list, all origins will be allowed.
+     * An origin may contain a wildcard (*) to replace 0 or more characters
+     * (i.e.: http://*.domain.com). Usage of wildcards implies a small performance penalty.
+     * Only one wildcard can be used per origin.
+     * Default value is ["*"]
+     */
+    allowedOrigins: string[];
+    /**
+     * AllowedMethods is a list of methods the client is allowed to use with
+     * cross-domain requests. Default value is simple methods (HEAD, GET and POST).
+     */
+    allowedMethods: string[];
+    /**
+     * AllowedHeaders is list of non simple headers the client is allowed to use with
+     * cross-domain requests.
+     * If the special "*" value is present in the list, all headers will be allowed.
+     * Default value is [] but "Origin" is always appended to the list.
+     */
+    allowedHeaders: string[];
+    /**
+     * ExposedHeaders indicates which headers are safe to expose to the API of a CORS
+     * API specification
+     */
+    exposedHeaders: string[];
+    /**
+     * MaxAge indicates how long (in seconds) the results of a preflight request
+     * can be cached
+     */
+    maxAge: number;
+    /**
+     * AllowCredentials indicates whether the request can include user credentials like
+     * cookies, HTTP authentication or client side SSL certificates.
+     */
+    allowCredentials: boolean;
 }
 export declare const WunderNodeConfig: {
     encode(message: WunderNodeConfig, writer?: Writer): Writer;
@@ -358,6 +398,13 @@ export declare const UserDefinedApi: {
     fromJSON(object: any): UserDefinedApi;
     fromPartial(object: DeepPartial<UserDefinedApi>): UserDefinedApi;
     toJSON(message: UserDefinedApi): unknown;
+};
+export declare const CorsConfiguration: {
+    encode(message: CorsConfiguration, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number | undefined): CorsConfiguration;
+    fromJSON(object: any): CorsConfiguration;
+    fromPartial(object: DeepPartial<CorsConfiguration>): CorsConfiguration;
+    toJSON(message: CorsConfiguration): unknown;
 };
 declare type Builtin = Date | Function | Uint8Array | string | number | undefined;
 export declare type DeepPartial<T> = T extends Builtin ? T : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>> : T extends {} ? {

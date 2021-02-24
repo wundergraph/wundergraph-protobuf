@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserDefinedApi = exports.WunderGraphConfiguration = exports.WunderNodeMetrics = exports.DataUsageMetric = exports.ArgumentConfiguration = exports.TypeField = exports.FieldConfiguration = exports.HTTPHeader = exports.URLQueryConfiguration = exports.RESTSubscriptionConfiguration = exports.FetchConfiguration_HeaderEntry = exports.FetchConfiguration = exports.GraphQLSubscriptionConfiguration = exports.DataSourceCustomStatic = exports.GraphQLFederationConfiguration = exports.DataSourceCustomGraphQL = exports.DataSourceCustomREST = exports.DataSourceConfiguration = exports.EngineConfiguration = exports.OperationMock = exports.Operation = exports.Api = exports.Logging = exports.Certificate = exports.Server = exports.WunderNodeConfig = exports.argumentSourceToJSON = exports.argumentSourceFromJSON = exports.ArgumentSource = exports.hTTPMethodToJSON = exports.hTTPMethodFromJSON = exports.HTTPMethod = exports.dataSourceKindToJSON = exports.dataSourceKindFromJSON = exports.DataSourceKind = exports.operationTypeToJSON = exports.operationTypeFromJSON = exports.OperationType = exports.logLevelToJSON = exports.logLevelFromJSON = exports.LogLevel = exports.protobufPackage = void 0;
+exports.CorsConfiguration = exports.UserDefinedApi = exports.WunderGraphConfiguration = exports.WunderNodeMetrics = exports.DataUsageMetric = exports.ArgumentConfiguration = exports.TypeField = exports.FieldConfiguration = exports.HTTPHeader = exports.URLQueryConfiguration = exports.RESTSubscriptionConfiguration = exports.FetchConfiguration_HeaderEntry = exports.FetchConfiguration = exports.GraphQLSubscriptionConfiguration = exports.DataSourceCustomStatic = exports.GraphQLFederationConfiguration = exports.DataSourceCustomGraphQL = exports.DataSourceCustomREST = exports.DataSourceConfiguration = exports.EngineConfiguration = exports.OperationMock = exports.Operation = exports.Api = exports.Logging = exports.Certificate = exports.Server = exports.WunderNodeConfig = exports.argumentSourceToJSON = exports.argumentSourceFromJSON = exports.ArgumentSource = exports.hTTPMethodToJSON = exports.hTTPMethodFromJSON = exports.HTTPMethod = exports.dataSourceKindToJSON = exports.dataSourceKindFromJSON = exports.DataSourceKind = exports.operationTypeToJSON = exports.operationTypeFromJSON = exports.OperationType = exports.logLevelToJSON = exports.logLevelFromJSON = exports.LogLevel = exports.protobufPackage = void 0;
 /* eslint-disable */
 const Long = require("long");
 const minimal_1 = require("protobufjs/minimal");
@@ -614,6 +614,9 @@ exports.Api = {
         for (const v of message.operations) {
             exports.Operation.encode(v, writer.uint32(50).fork()).ldelim();
         }
+        if (message.corsConfiguration !== undefined) {
+            exports.CorsConfiguration.encode(message.corsConfiguration, writer.uint32(58).fork()).ldelim();
+        }
         return writer;
     },
     decode(input, length) {
@@ -642,6 +645,9 @@ exports.Api = {
                     break;
                 case 6:
                     message.operations.push(exports.Operation.decode(reader, reader.uint32()));
+                    break;
+                case 7:
+                    message.corsConfiguration = exports.CorsConfiguration.decode(reader, reader.uint32());
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -691,6 +697,13 @@ exports.Api = {
                 message.operations.push(exports.Operation.fromJSON(e));
             }
         }
+        if (object.corsConfiguration !== undefined &&
+            object.corsConfiguration !== null) {
+            message.corsConfiguration = exports.CorsConfiguration.fromJSON(object.corsConfiguration);
+        }
+        else {
+            message.corsConfiguration = undefined;
+        }
         return message;
     },
     fromPartial(object) {
@@ -734,6 +747,13 @@ exports.Api = {
                 message.operations.push(exports.Operation.fromPartial(e));
             }
         }
+        if (object.corsConfiguration !== undefined &&
+            object.corsConfiguration !== null) {
+            message.corsConfiguration = exports.CorsConfiguration.fromPartial(object.corsConfiguration);
+        }
+        else {
+            message.corsConfiguration = undefined;
+        }
         return message;
     },
     toJSON(message) {
@@ -759,6 +779,10 @@ exports.Api = {
         else {
             obj.operations = [];
         }
+        message.corsConfiguration !== undefined &&
+            (obj.corsConfiguration = message.corsConfiguration
+                ? exports.CorsConfiguration.toJSON(message.corsConfiguration)
+                : undefined);
         return obj;
     },
 };
@@ -2818,6 +2842,9 @@ exports.UserDefinedApi = {
         for (const v of message.operations) {
             exports.Operation.encode(v, writer.uint32(50).fork()).ldelim();
         }
+        if (message.corsConfiguration !== undefined) {
+            exports.CorsConfiguration.encode(message.corsConfiguration, writer.uint32(58).fork()).ldelim();
+        }
         return writer;
     },
     decode(input, length) {
@@ -2839,6 +2866,9 @@ exports.UserDefinedApi = {
                     break;
                 case 6:
                     message.operations.push(exports.Operation.decode(reader, reader.uint32()));
+                    break;
+                case 7:
+                    message.corsConfiguration = exports.CorsConfiguration.decode(reader, reader.uint32());
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -2875,6 +2905,13 @@ exports.UserDefinedApi = {
                 message.operations.push(exports.Operation.fromJSON(e));
             }
         }
+        if (object.corsConfiguration !== undefined &&
+            object.corsConfiguration !== null) {
+            message.corsConfiguration = exports.CorsConfiguration.fromJSON(object.corsConfiguration);
+        }
+        else {
+            message.corsConfiguration = undefined;
+        }
         return message;
     },
     fromPartial(object) {
@@ -2905,6 +2942,13 @@ exports.UserDefinedApi = {
                 message.operations.push(exports.Operation.fromPartial(e));
             }
         }
+        if (object.corsConfiguration !== undefined &&
+            object.corsConfiguration !== null) {
+            message.corsConfiguration = exports.CorsConfiguration.fromPartial(object.corsConfiguration);
+        }
+        else {
+            message.corsConfiguration = undefined;
+        }
         return message;
     },
     toJSON(message) {
@@ -2922,6 +2966,190 @@ exports.UserDefinedApi = {
         else {
             obj.operations = [];
         }
+        message.corsConfiguration !== undefined &&
+            (obj.corsConfiguration = message.corsConfiguration
+                ? exports.CorsConfiguration.toJSON(message.corsConfiguration)
+                : undefined);
+        return obj;
+    },
+};
+const baseCorsConfiguration = {
+    allowedOrigins: "",
+    allowedMethods: "",
+    allowedHeaders: "",
+    exposedHeaders: "",
+    maxAge: 0,
+    allowCredentials: false,
+};
+exports.CorsConfiguration = {
+    encode(message, writer = minimal_1.Writer.create()) {
+        for (const v of message.allowedOrigins) {
+            writer.uint32(10).string(v);
+        }
+        for (const v of message.allowedMethods) {
+            writer.uint32(18).string(v);
+        }
+        for (const v of message.allowedHeaders) {
+            writer.uint32(26).string(v);
+        }
+        for (const v of message.exposedHeaders) {
+            writer.uint32(34).string(v);
+        }
+        if (message.maxAge !== 0) {
+            writer.uint32(40).int64(message.maxAge);
+        }
+        if (message.allowCredentials === true) {
+            writer.uint32(48).bool(message.allowCredentials);
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new minimal_1.Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = globalThis.Object.create(baseCorsConfiguration);
+        message.allowedOrigins = [];
+        message.allowedMethods = [];
+        message.allowedHeaders = [];
+        message.exposedHeaders = [];
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.allowedOrigins.push(reader.string());
+                    break;
+                case 2:
+                    message.allowedMethods.push(reader.string());
+                    break;
+                case 3:
+                    message.allowedHeaders.push(reader.string());
+                    break;
+                case 4:
+                    message.exposedHeaders.push(reader.string());
+                    break;
+                case 5:
+                    message.maxAge = longToNumber(reader.int64());
+                    break;
+                case 6:
+                    message.allowCredentials = reader.bool();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = globalThis.Object.create(baseCorsConfiguration);
+        message.allowedOrigins = [];
+        message.allowedMethods = [];
+        message.allowedHeaders = [];
+        message.exposedHeaders = [];
+        if (object.allowedOrigins !== undefined && object.allowedOrigins !== null) {
+            for (const e of object.allowedOrigins) {
+                message.allowedOrigins.push(String(e));
+            }
+        }
+        if (object.allowedMethods !== undefined && object.allowedMethods !== null) {
+            for (const e of object.allowedMethods) {
+                message.allowedMethods.push(String(e));
+            }
+        }
+        if (object.allowedHeaders !== undefined && object.allowedHeaders !== null) {
+            for (const e of object.allowedHeaders) {
+                message.allowedHeaders.push(String(e));
+            }
+        }
+        if (object.exposedHeaders !== undefined && object.exposedHeaders !== null) {
+            for (const e of object.exposedHeaders) {
+                message.exposedHeaders.push(String(e));
+            }
+        }
+        if (object.maxAge !== undefined && object.maxAge !== null) {
+            message.maxAge = Number(object.maxAge);
+        }
+        else {
+            message.maxAge = 0;
+        }
+        if (object.allowCredentials !== undefined &&
+            object.allowCredentials !== null) {
+            message.allowCredentials = Boolean(object.allowCredentials);
+        }
+        else {
+            message.allowCredentials = false;
+        }
+        return message;
+    },
+    fromPartial(object) {
+        const message = { ...baseCorsConfiguration };
+        message.allowedOrigins = [];
+        message.allowedMethods = [];
+        message.allowedHeaders = [];
+        message.exposedHeaders = [];
+        if (object.allowedOrigins !== undefined && object.allowedOrigins !== null) {
+            for (const e of object.allowedOrigins) {
+                message.allowedOrigins.push(e);
+            }
+        }
+        if (object.allowedMethods !== undefined && object.allowedMethods !== null) {
+            for (const e of object.allowedMethods) {
+                message.allowedMethods.push(e);
+            }
+        }
+        if (object.allowedHeaders !== undefined && object.allowedHeaders !== null) {
+            for (const e of object.allowedHeaders) {
+                message.allowedHeaders.push(e);
+            }
+        }
+        if (object.exposedHeaders !== undefined && object.exposedHeaders !== null) {
+            for (const e of object.exposedHeaders) {
+                message.exposedHeaders.push(e);
+            }
+        }
+        if (object.maxAge !== undefined && object.maxAge !== null) {
+            message.maxAge = object.maxAge;
+        }
+        else {
+            message.maxAge = 0;
+        }
+        if (object.allowCredentials !== undefined &&
+            object.allowCredentials !== null) {
+            message.allowCredentials = object.allowCredentials;
+        }
+        else {
+            message.allowCredentials = false;
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        if (message.allowedOrigins) {
+            obj.allowedOrigins = message.allowedOrigins.map((e) => e);
+        }
+        else {
+            obj.allowedOrigins = [];
+        }
+        if (message.allowedMethods) {
+            obj.allowedMethods = message.allowedMethods.map((e) => e);
+        }
+        else {
+            obj.allowedMethods = [];
+        }
+        if (message.allowedHeaders) {
+            obj.allowedHeaders = message.allowedHeaders.map((e) => e);
+        }
+        else {
+            obj.allowedHeaders = [];
+        }
+        if (message.exposedHeaders) {
+            obj.exposedHeaders = message.exposedHeaders.map((e) => e);
+        }
+        else {
+            obj.exposedHeaders = [];
+        }
+        message.maxAge !== undefined && (obj.maxAge = message.maxAge);
+        message.allowCredentials !== undefined &&
+            (obj.allowCredentials = message.allowCredentials);
         return obj;
     },
 };
