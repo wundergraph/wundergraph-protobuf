@@ -67,6 +67,7 @@ export interface Api {
     enableGraphqlEndpoint: boolean;
     operations: Operation[];
     corsConfiguration: CorsConfiguration | undefined;
+    primaryHost: string;
 }
 export interface Operation {
     name: string;

@@ -593,6 +593,7 @@ const baseApi = {
     pathPrefix: "",
     enableSingleFlight: false,
     enableGraphqlEndpoint: false,
+    primaryHost: "",
 };
 exports.Api = {
     encode(message, writer = minimal_1.Writer.create()) {
@@ -616,6 +617,9 @@ exports.Api = {
         }
         if (message.corsConfiguration !== undefined) {
             exports.CorsConfiguration.encode(message.corsConfiguration, writer.uint32(58).fork()).ldelim();
+        }
+        if (message.primaryHost !== "") {
+            writer.uint32(66).string(message.primaryHost);
         }
         return writer;
     },
@@ -648,6 +652,9 @@ exports.Api = {
                     break;
                 case 7:
                     message.corsConfiguration = exports.CorsConfiguration.decode(reader, reader.uint32());
+                    break;
+                case 8:
+                    message.primaryHost = reader.string();
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -704,6 +711,12 @@ exports.Api = {
         else {
             message.corsConfiguration = undefined;
         }
+        if (object.primaryHost !== undefined && object.primaryHost !== null) {
+            message.primaryHost = String(object.primaryHost);
+        }
+        else {
+            message.primaryHost = "";
+        }
         return message;
     },
     fromPartial(object) {
@@ -754,6 +767,12 @@ exports.Api = {
         else {
             message.corsConfiguration = undefined;
         }
+        if (object.primaryHost !== undefined && object.primaryHost !== null) {
+            message.primaryHost = object.primaryHost;
+        }
+        else {
+            message.primaryHost = "";
+        }
         return message;
     },
     toJSON(message) {
@@ -783,6 +802,8 @@ exports.Api = {
             (obj.corsConfiguration = message.corsConfiguration
                 ? exports.CorsConfiguration.toJSON(message.corsConfiguration)
                 : undefined);
+        message.primaryHost !== undefined &&
+            (obj.primaryHost = message.primaryHost);
         return obj;
     },
 };

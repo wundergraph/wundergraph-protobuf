@@ -46,6 +46,7 @@ message Api {
     bool enableGraphqlEndpoint = 5;
     repeated Operation operations = 6;
     CorsConfiguration corsConfiguration = 7;
+    string primaryHost = 8;
 }
 
 message Operation {

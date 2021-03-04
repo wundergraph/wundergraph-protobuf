@@ -240,6 +240,7 @@ export interface Api {
   enableGraphqlEndpoint: boolean;
   operations: Operation[];
   corsConfiguration: CorsConfiguration | undefined;
+  primaryHost: string;
 }
 
 export interface Operation {
@@ -829,6 +830,7 @@ const baseApi: object = {
   pathPrefix: "",
   enableSingleFlight: false,
   enableGraphqlEndpoint: false,
+  primaryHost: "",
 };
 
 export const Api = {
@@ -859,6 +861,9 @@ export const Api = {
         message.corsConfiguration,
         writer.uint32(58).fork()
       ).ldelim();
+    }
+    if (message.primaryHost !== "") {
+      writer.uint32(66).string(message.primaryHost);
     }
     return writer;
   },
@@ -898,6 +903,9 @@ export const Api = {
             reader,
             reader.uint32()
           );
+          break;
+        case 8:
+          message.primaryHost = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -962,6 +970,11 @@ export const Api = {
     } else {
       message.corsConfiguration = undefined;
     }
+    if (object.primaryHost !== undefined && object.primaryHost !== null) {
+      message.primaryHost = String(object.primaryHost);
+    } else {
+      message.primaryHost = "";
+    }
     return message;
   },
 
@@ -1020,6 +1033,11 @@ export const Api = {
     } else {
       message.corsConfiguration = undefined;
     }
+    if (object.primaryHost !== undefined && object.primaryHost !== null) {
+      message.primaryHost = object.primaryHost;
+    } else {
+      message.primaryHost = "";
+    }
     return message;
   },
 
@@ -1050,6 +1068,8 @@ export const Api = {
       (obj.corsConfiguration = message.corsConfiguration
         ? CorsConfiguration.toJSON(message.corsConfiguration)
         : undefined);
+    message.primaryHost !== undefined &&
+      (obj.primaryHost = message.primaryHost);
     return obj;
   },
 };
