@@ -594,6 +594,7 @@ const baseApi = {
     enableSingleFlight: false,
     enableGraphqlEndpoint: false,
     primaryHost: "",
+    deploymentId: "",
 };
 exports.Api = {
     encode(message, writer = minimal_1.Writer.create()) {
@@ -620,6 +621,9 @@ exports.Api = {
         }
         if (message.primaryHost !== "") {
             writer.uint32(66).string(message.primaryHost);
+        }
+        if (message.deploymentId !== "") {
+            writer.uint32(74).string(message.deploymentId);
         }
         return writer;
     },
@@ -655,6 +659,9 @@ exports.Api = {
                     break;
                 case 8:
                     message.primaryHost = reader.string();
+                    break;
+                case 9:
+                    message.deploymentId = reader.string();
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -717,6 +724,12 @@ exports.Api = {
         else {
             message.primaryHost = "";
         }
+        if (object.deploymentId !== undefined && object.deploymentId !== null) {
+            message.deploymentId = String(object.deploymentId);
+        }
+        else {
+            message.deploymentId = "";
+        }
         return message;
     },
     fromPartial(object) {
@@ -773,6 +786,12 @@ exports.Api = {
         else {
             message.primaryHost = "";
         }
+        if (object.deploymentId !== undefined && object.deploymentId !== null) {
+            message.deploymentId = object.deploymentId;
+        }
+        else {
+            message.deploymentId = "";
+        }
         return message;
     },
     toJSON(message) {
@@ -804,6 +823,8 @@ exports.Api = {
                 : undefined);
         message.primaryHost !== undefined &&
             (obj.primaryHost = message.primaryHost);
+        message.deploymentId !== undefined &&
+            (obj.deploymentId = message.deploymentId);
         return obj;
     },
 };
@@ -2848,12 +2869,9 @@ exports.WunderGraphConfiguration = {
         return obj;
     },
 };
-const baseUserDefinedApi = { name: "", enableGraphqlEndpoint: false };
+const baseUserDefinedApi = { enableGraphqlEndpoint: false };
 exports.UserDefinedApi = {
     encode(message, writer = minimal_1.Writer.create()) {
-        if (message.name !== "") {
-            writer.uint32(18).string(message.name);
-        }
         if (message.engineConfiguration !== undefined) {
             exports.EngineConfiguration.encode(message.engineConfiguration, writer.uint32(26).fork()).ldelim();
         }
@@ -2876,9 +2894,6 @@ exports.UserDefinedApi = {
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
-                case 2:
-                    message.name = reader.string();
-                    break;
                 case 3:
                     message.engineConfiguration = exports.EngineConfiguration.decode(reader, reader.uint32());
                     break;
@@ -2901,12 +2916,6 @@ exports.UserDefinedApi = {
     fromJSON(object) {
         const message = globalThis.Object.create(baseUserDefinedApi);
         message.operations = [];
-        if (object.name !== undefined && object.name !== null) {
-            message.name = String(object.name);
-        }
-        else {
-            message.name = "";
-        }
         if (object.engineConfiguration !== undefined &&
             object.engineConfiguration !== null) {
             message.engineConfiguration = exports.EngineConfiguration.fromJSON(object.engineConfiguration);
@@ -2938,12 +2947,6 @@ exports.UserDefinedApi = {
     fromPartial(object) {
         const message = { ...baseUserDefinedApi };
         message.operations = [];
-        if (object.name !== undefined && object.name !== null) {
-            message.name = object.name;
-        }
-        else {
-            message.name = "";
-        }
         if (object.engineConfiguration !== undefined &&
             object.engineConfiguration !== null) {
             message.engineConfiguration = exports.EngineConfiguration.fromPartial(object.engineConfiguration);
@@ -2974,7 +2977,6 @@ exports.UserDefinedApi = {
     },
     toJSON(message) {
         const obj = {};
-        message.name !== undefined && (obj.name = message.name);
         message.engineConfiguration !== undefined &&
             (obj.engineConfiguration = message.engineConfiguration
                 ? exports.EngineConfiguration.toJSON(message.engineConfiguration)

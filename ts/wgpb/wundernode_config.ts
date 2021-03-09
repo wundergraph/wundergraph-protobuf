@@ -241,6 +241,7 @@ export interface Api {
   operations: Operation[];
   corsConfiguration: CorsConfiguration | undefined;
   primaryHost: string;
+  deploymentId: string;
 }
 
 export interface Operation {
@@ -366,7 +367,6 @@ export interface WunderGraphConfiguration {
 }
 
 export interface UserDefinedApi {
-  name: string;
   engineConfiguration: EngineConfiguration | undefined;
   enableGraphqlEndpoint: boolean;
   operations: Operation[];
@@ -831,6 +831,7 @@ const baseApi: object = {
   enableSingleFlight: false,
   enableGraphqlEndpoint: false,
   primaryHost: "",
+  deploymentId: "",
 };
 
 export const Api = {
@@ -864,6 +865,9 @@ export const Api = {
     }
     if (message.primaryHost !== "") {
       writer.uint32(66).string(message.primaryHost);
+    }
+    if (message.deploymentId !== "") {
+      writer.uint32(74).string(message.deploymentId);
     }
     return writer;
   },
@@ -906,6 +910,9 @@ export const Api = {
           break;
         case 8:
           message.primaryHost = reader.string();
+          break;
+        case 9:
+          message.deploymentId = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -975,6 +982,11 @@ export const Api = {
     } else {
       message.primaryHost = "";
     }
+    if (object.deploymentId !== undefined && object.deploymentId !== null) {
+      message.deploymentId = String(object.deploymentId);
+    } else {
+      message.deploymentId = "";
+    }
     return message;
   },
 
@@ -1038,6 +1050,11 @@ export const Api = {
     } else {
       message.primaryHost = "";
     }
+    if (object.deploymentId !== undefined && object.deploymentId !== null) {
+      message.deploymentId = object.deploymentId;
+    } else {
+      message.deploymentId = "";
+    }
     return message;
   },
 
@@ -1070,6 +1087,8 @@ export const Api = {
         : undefined);
     message.primaryHost !== undefined &&
       (obj.primaryHost = message.primaryHost);
+    message.deploymentId !== undefined &&
+      (obj.deploymentId = message.deploymentId);
     return obj;
   },
 };
@@ -3438,13 +3457,10 @@ export const WunderGraphConfiguration = {
   },
 };
 
-const baseUserDefinedApi: object = { name: "", enableGraphqlEndpoint: false };
+const baseUserDefinedApi: object = { enableGraphqlEndpoint: false };
 
 export const UserDefinedApi = {
   encode(message: UserDefinedApi, writer: Writer = Writer.create()): Writer {
-    if (message.name !== "") {
-      writer.uint32(18).string(message.name);
-    }
     if (message.engineConfiguration !== undefined) {
       EngineConfiguration.encode(
         message.engineConfiguration,
@@ -3476,9 +3492,6 @@ export const UserDefinedApi = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 2:
-          message.name = reader.string();
-          break;
         case 3:
           message.engineConfiguration = EngineConfiguration.decode(
             reader,
@@ -3510,11 +3523,6 @@ export const UserDefinedApi = {
       baseUserDefinedApi
     ) as UserDefinedApi;
     message.operations = [];
-    if (object.name !== undefined && object.name !== null) {
-      message.name = String(object.name);
-    } else {
-      message.name = "";
-    }
     if (
       object.engineConfiguration !== undefined &&
       object.engineConfiguration !== null
@@ -3554,11 +3562,6 @@ export const UserDefinedApi = {
   fromPartial(object: DeepPartial<UserDefinedApi>): UserDefinedApi {
     const message = { ...baseUserDefinedApi } as UserDefinedApi;
     message.operations = [];
-    if (object.name !== undefined && object.name !== null) {
-      message.name = object.name;
-    } else {
-      message.name = "";
-    }
     if (
       object.engineConfiguration !== undefined &&
       object.engineConfiguration !== null
@@ -3597,7 +3600,6 @@ export const UserDefinedApi = {
 
   toJSON(message: UserDefinedApi): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
     message.engineConfiguration !== undefined &&
       (obj.engineConfiguration = message.engineConfiguration
         ? EngineConfiguration.toJSON(message.engineConfiguration)

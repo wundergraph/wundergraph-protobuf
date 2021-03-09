@@ -47,6 +47,7 @@ message Api {
     repeated Operation operations = 6;
     CorsConfiguration corsConfiguration = 7;
     string primaryHost = 8;
+    string deploymentId = 9;
 }
 
 message Operation {
@@ -191,7 +192,6 @@ message WunderGraphConfiguration {
 }
 
 message UserDefinedApi {
-    string name = 2;
     EngineConfiguration engineConfiguration = 3;
     bool enableGraphqlEndpoint = 5;
     repeated Operation operations = 6;

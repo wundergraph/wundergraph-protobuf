@@ -68,6 +68,7 @@ export interface Api {
     operations: Operation[];
     corsConfiguration: CorsConfiguration | undefined;
     primaryHost: string;
+    deploymentId: string;
 }
 export interface Operation {
     name: string;
@@ -174,7 +175,6 @@ export interface WunderGraphConfiguration {
     api: UserDefinedApi | undefined;
 }
 export interface UserDefinedApi {
-    name: string;
     engineConfiguration: EngineConfiguration | undefined;
     enableGraphqlEndpoint: boolean;
     operations: Operation[];
