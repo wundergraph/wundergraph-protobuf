@@ -364,6 +364,9 @@ export interface WunderNodeMetrics {
 
 export interface WunderGraphConfiguration {
   api: UserDefinedApi | undefined;
+  apiId: string;
+  deploymentName: string;
+  environmentIds: string[];
 }
 
 export interface UserDefinedApi {
@@ -3387,7 +3390,11 @@ export const WunderNodeMetrics = {
   },
 };
 
-const baseWunderGraphConfiguration: object = {};
+const baseWunderGraphConfiguration: object = {
+  apiId: "",
+  deploymentName: "",
+  environmentIds: "",
+};
 
 export const WunderGraphConfiguration = {
   encode(
@@ -3396,6 +3403,15 @@ export const WunderGraphConfiguration = {
   ): Writer {
     if (message.api !== undefined) {
       UserDefinedApi.encode(message.api, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.apiId !== "") {
+      writer.uint32(18).string(message.apiId);
+    }
+    if (message.deploymentName !== "") {
+      writer.uint32(26).string(message.deploymentName);
+    }
+    for (const v of message.environmentIds) {
+      writer.uint32(34).string(v!);
     }
     return writer;
   },
@@ -3409,11 +3425,21 @@ export const WunderGraphConfiguration = {
     const message = globalThis.Object.create(
       baseWunderGraphConfiguration
     ) as WunderGraphConfiguration;
+    message.environmentIds = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
           message.api = UserDefinedApi.decode(reader, reader.uint32());
+          break;
+        case 2:
+          message.apiId = reader.string();
+          break;
+        case 3:
+          message.deploymentName = reader.string();
+          break;
+        case 4:
+          message.environmentIds.push(reader.string());
           break;
         default:
           reader.skipType(tag & 7);
@@ -3427,10 +3453,26 @@ export const WunderGraphConfiguration = {
     const message = globalThis.Object.create(
       baseWunderGraphConfiguration
     ) as WunderGraphConfiguration;
+    message.environmentIds = [];
     if (object.api !== undefined && object.api !== null) {
       message.api = UserDefinedApi.fromJSON(object.api);
     } else {
       message.api = undefined;
+    }
+    if (object.apiId !== undefined && object.apiId !== null) {
+      message.apiId = String(object.apiId);
+    } else {
+      message.apiId = "";
+    }
+    if (object.deploymentName !== undefined && object.deploymentName !== null) {
+      message.deploymentName = String(object.deploymentName);
+    } else {
+      message.deploymentName = "";
+    }
+    if (object.environmentIds !== undefined && object.environmentIds !== null) {
+      for (const e of object.environmentIds) {
+        message.environmentIds.push(String(e));
+      }
     }
     return message;
   },
@@ -3441,10 +3483,26 @@ export const WunderGraphConfiguration = {
     const message = {
       ...baseWunderGraphConfiguration,
     } as WunderGraphConfiguration;
+    message.environmentIds = [];
     if (object.api !== undefined && object.api !== null) {
       message.api = UserDefinedApi.fromPartial(object.api);
     } else {
       message.api = undefined;
+    }
+    if (object.apiId !== undefined && object.apiId !== null) {
+      message.apiId = object.apiId;
+    } else {
+      message.apiId = "";
+    }
+    if (object.deploymentName !== undefined && object.deploymentName !== null) {
+      message.deploymentName = object.deploymentName;
+    } else {
+      message.deploymentName = "";
+    }
+    if (object.environmentIds !== undefined && object.environmentIds !== null) {
+      for (const e of object.environmentIds) {
+        message.environmentIds.push(e);
+      }
     }
     return message;
   },
@@ -3453,6 +3511,14 @@ export const WunderGraphConfiguration = {
     const obj: any = {};
     message.api !== undefined &&
       (obj.api = message.api ? UserDefinedApi.toJSON(message.api) : undefined);
+    message.apiId !== undefined && (obj.apiId = message.apiId);
+    message.deploymentName !== undefined &&
+      (obj.deploymentName = message.deploymentName);
+    if (message.environmentIds) {
+      obj.environmentIds = message.environmentIds.map((e) => e);
+    } else {
+      obj.environmentIds = [];
+    }
     return obj;
   },
 };

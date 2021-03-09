@@ -173,6 +173,9 @@ export interface WunderNodeMetrics {
 }
 export interface WunderGraphConfiguration {
     api: UserDefinedApi | undefined;
+    apiId: string;
+    deploymentName: string;
+    environmentIds: string[];
 }
 export interface UserDefinedApi {
     engineConfiguration: EngineConfiguration | undefined;

@@ -189,6 +189,9 @@ message WunderNodeMetrics {
 
 message WunderGraphConfiguration {
     UserDefinedApi api = 1;
+    string apiId = 2;
+    string deploymentName = 3;
+    repeated string environmentIds = 4;
 }
 
 message UserDefinedApi {
