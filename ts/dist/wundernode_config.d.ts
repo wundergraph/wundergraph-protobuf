@@ -176,6 +176,7 @@ export interface WunderGraphConfiguration {
     apiId: string;
     deploymentName: string;
     environmentIds: string[];
+    apiName: string;
 }
 export interface UserDefinedApi {
     engineConfiguration: EngineConfiguration | undefined;

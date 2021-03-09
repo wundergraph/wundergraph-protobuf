@@ -192,6 +192,7 @@ message WunderGraphConfiguration {
     string apiId = 2;
     string deploymentName = 3;
     repeated string environmentIds = 4;
+    string apiName = 5;
 }
 
 message UserDefinedApi {

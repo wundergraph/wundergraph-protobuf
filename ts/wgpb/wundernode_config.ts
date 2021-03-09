@@ -367,6 +367,7 @@ export interface WunderGraphConfiguration {
   apiId: string;
   deploymentName: string;
   environmentIds: string[];
+  apiName: string;
 }
 
 export interface UserDefinedApi {
@@ -3394,6 +3395,7 @@ const baseWunderGraphConfiguration: object = {
   apiId: "",
   deploymentName: "",
   environmentIds: "",
+  apiName: "",
 };
 
 export const WunderGraphConfiguration = {
@@ -3412,6 +3414,9 @@ export const WunderGraphConfiguration = {
     }
     for (const v of message.environmentIds) {
       writer.uint32(34).string(v!);
+    }
+    if (message.apiName !== "") {
+      writer.uint32(42).string(message.apiName);
     }
     return writer;
   },
@@ -3440,6 +3445,9 @@ export const WunderGraphConfiguration = {
           break;
         case 4:
           message.environmentIds.push(reader.string());
+          break;
+        case 5:
+          message.apiName = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -3474,6 +3482,11 @@ export const WunderGraphConfiguration = {
         message.environmentIds.push(String(e));
       }
     }
+    if (object.apiName !== undefined && object.apiName !== null) {
+      message.apiName = String(object.apiName);
+    } else {
+      message.apiName = "";
+    }
     return message;
   },
 
@@ -3504,6 +3517,11 @@ export const WunderGraphConfiguration = {
         message.environmentIds.push(e);
       }
     }
+    if (object.apiName !== undefined && object.apiName !== null) {
+      message.apiName = object.apiName;
+    } else {
+      message.apiName = "";
+    }
     return message;
   },
 
@@ -3519,6 +3537,7 @@ export const WunderGraphConfiguration = {
     } else {
       obj.environmentIds = [];
     }
+    message.apiName !== undefined && (obj.apiName = message.apiName);
     return obj;
   },
 };
