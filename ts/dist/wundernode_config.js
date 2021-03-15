@@ -1289,8 +1289,6 @@ exports.Operation = {
 const baseOperationCacheConfig = {
     enable: false,
     maxAge: 0,
-    cacheKeyPrefix: "",
-    etagKeyPrefix: "",
     public: false,
 };
 exports.OperationCacheConfig = {
@@ -1301,14 +1299,8 @@ exports.OperationCacheConfig = {
         if (message.maxAge !== 0) {
             writer.uint32(16).int64(message.maxAge);
         }
-        if (message.cacheKeyPrefix !== "") {
-            writer.uint32(26).string(message.cacheKeyPrefix);
-        }
-        if (message.etagKeyPrefix !== "") {
-            writer.uint32(34).string(message.etagKeyPrefix);
-        }
         if (message.public === true) {
-            writer.uint32(40).bool(message.public);
+            writer.uint32(24).bool(message.public);
         }
         return writer;
     },
@@ -1326,12 +1318,6 @@ exports.OperationCacheConfig = {
                     message.maxAge = longToNumber(reader.int64());
                     break;
                 case 3:
-                    message.cacheKeyPrefix = reader.string();
-                    break;
-                case 4:
-                    message.etagKeyPrefix = reader.string();
-                    break;
-                case 5:
                     message.public = reader.bool();
                     break;
                 default:
@@ -1355,18 +1341,6 @@ exports.OperationCacheConfig = {
         else {
             message.maxAge = 0;
         }
-        if (object.cacheKeyPrefix !== undefined && object.cacheKeyPrefix !== null) {
-            message.cacheKeyPrefix = String(object.cacheKeyPrefix);
-        }
-        else {
-            message.cacheKeyPrefix = "";
-        }
-        if (object.etagKeyPrefix !== undefined && object.etagKeyPrefix !== null) {
-            message.etagKeyPrefix = String(object.etagKeyPrefix);
-        }
-        else {
-            message.etagKeyPrefix = "";
-        }
         if (object.public !== undefined && object.public !== null) {
             message.public = Boolean(object.public);
         }
@@ -1389,18 +1363,6 @@ exports.OperationCacheConfig = {
         else {
             message.maxAge = 0;
         }
-        if (object.cacheKeyPrefix !== undefined && object.cacheKeyPrefix !== null) {
-            message.cacheKeyPrefix = object.cacheKeyPrefix;
-        }
-        else {
-            message.cacheKeyPrefix = "";
-        }
-        if (object.etagKeyPrefix !== undefined && object.etagKeyPrefix !== null) {
-            message.etagKeyPrefix = object.etagKeyPrefix;
-        }
-        else {
-            message.etagKeyPrefix = "";
-        }
         if (object.public !== undefined && object.public !== null) {
             message.public = object.public;
         }
@@ -1413,10 +1375,6 @@ exports.OperationCacheConfig = {
         const obj = {};
         message.enable !== undefined && (obj.enable = message.enable);
         message.maxAge !== undefined && (obj.maxAge = message.maxAge);
-        message.cacheKeyPrefix !== undefined &&
-            (obj.cacheKeyPrefix = message.cacheKeyPrefix);
-        message.etagKeyPrefix !== undefined &&
-            (obj.etagKeyPrefix = message.etagKeyPrefix);
         message.public !== undefined && (obj.public = message.public);
         return obj;
     },

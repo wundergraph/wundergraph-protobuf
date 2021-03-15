@@ -102,8 +102,6 @@ export interface Operation {
 export interface OperationCacheConfig {
     enable: boolean;
     maxAge: number;
-    cacheKeyPrefix: string;
-    etagKeyPrefix: string;
     public: boolean;
 }
 export interface OperationMock {

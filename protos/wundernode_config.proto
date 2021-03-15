@@ -85,9 +85,7 @@ message Operation {
 message OperationCacheConfig {
     bool enable = 1;
     int64 maxAge = 2;
-    string cacheKeyPrefix = 3;
-    string etagKeyPrefix = 4;
-    bool public = 5;
+    bool public = 3;
 }
 
 message OperationMock {
