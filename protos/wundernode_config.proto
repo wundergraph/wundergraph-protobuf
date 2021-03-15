@@ -49,6 +49,7 @@ message Api {
     string primaryHost = 8;
     string deploymentId = 9;
     ApiCacheConfig cacheConfig = 10;
+    string apiConfigHash = 11;
 }
 
 message ApiCacheConfig {

@@ -280,6 +280,7 @@ export interface Api {
   primaryHost: string;
   deploymentId: string;
   cacheConfig: ApiCacheConfig | undefined;
+  apiConfigHash: string;
 }
 
 export interface ApiCacheConfig {
@@ -897,6 +898,7 @@ const baseApi: object = {
   enableGraphqlEndpoint: false,
   primaryHost: "",
   deploymentId: "",
+  apiConfigHash: "",
 };
 
 export const Api = {
@@ -939,6 +941,9 @@ export const Api = {
         message.cacheConfig,
         writer.uint32(82).fork()
       ).ldelim();
+    }
+    if (message.apiConfigHash !== "") {
+      writer.uint32(90).string(message.apiConfigHash);
     }
     return writer;
   },
@@ -987,6 +992,9 @@ export const Api = {
           break;
         case 10:
           message.cacheConfig = ApiCacheConfig.decode(reader, reader.uint32());
+          break;
+        case 11:
+          message.apiConfigHash = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -1066,6 +1074,11 @@ export const Api = {
     } else {
       message.cacheConfig = undefined;
     }
+    if (object.apiConfigHash !== undefined && object.apiConfigHash !== null) {
+      message.apiConfigHash = String(object.apiConfigHash);
+    } else {
+      message.apiConfigHash = "";
+    }
     return message;
   },
 
@@ -1139,6 +1152,11 @@ export const Api = {
     } else {
       message.cacheConfig = undefined;
     }
+    if (object.apiConfigHash !== undefined && object.apiConfigHash !== null) {
+      message.apiConfigHash = object.apiConfigHash;
+    } else {
+      message.apiConfigHash = "";
+    }
     return message;
   },
 
@@ -1177,6 +1195,8 @@ export const Api = {
       (obj.cacheConfig = message.cacheConfig
         ? ApiCacheConfig.toJSON(message.cacheConfig)
         : undefined);
+    message.apiConfigHash !== undefined &&
+      (obj.apiConfigHash = message.apiConfigHash);
     return obj;
   },
 };

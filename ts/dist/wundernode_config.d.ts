@@ -77,6 +77,7 @@ export interface Api {
     primaryHost: string;
     deploymentId: string;
     cacheConfig: ApiCacheConfig | undefined;
+    apiConfigHash: string;
 }
 export interface ApiCacheConfig {
     kind: ApiCacheKind;
