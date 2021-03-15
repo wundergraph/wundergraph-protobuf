@@ -311,6 +311,7 @@ export interface OperationCacheConfig {
   enable: boolean;
   maxAge: number;
   public: boolean;
+  staleWhileRevalidate: number;
 }
 
 export interface OperationMock {
@@ -1626,6 +1627,7 @@ const baseOperationCacheConfig: object = {
   enable: false,
   maxAge: 0,
   public: false,
+  staleWhileRevalidate: 0,
 };
 
 export const OperationCacheConfig = {
@@ -1641,6 +1643,9 @@ export const OperationCacheConfig = {
     }
     if (message.public === true) {
       writer.uint32(24).bool(message.public);
+    }
+    if (message.staleWhileRevalidate !== 0) {
+      writer.uint32(32).int64(message.staleWhileRevalidate);
     }
     return writer;
   },
@@ -1662,6 +1667,9 @@ export const OperationCacheConfig = {
           break;
         case 3:
           message.public = reader.bool();
+          break;
+        case 4:
+          message.staleWhileRevalidate = longToNumber(reader.int64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -1690,6 +1698,14 @@ export const OperationCacheConfig = {
     } else {
       message.public = false;
     }
+    if (
+      object.staleWhileRevalidate !== undefined &&
+      object.staleWhileRevalidate !== null
+    ) {
+      message.staleWhileRevalidate = Number(object.staleWhileRevalidate);
+    } else {
+      message.staleWhileRevalidate = 0;
+    }
     return message;
   },
 
@@ -1710,6 +1726,14 @@ export const OperationCacheConfig = {
     } else {
       message.public = false;
     }
+    if (
+      object.staleWhileRevalidate !== undefined &&
+      object.staleWhileRevalidate !== null
+    ) {
+      message.staleWhileRevalidate = object.staleWhileRevalidate;
+    } else {
+      message.staleWhileRevalidate = 0;
+    }
     return message;
   },
 
@@ -1718,6 +1742,8 @@ export const OperationCacheConfig = {
     message.enable !== undefined && (obj.enable = message.enable);
     message.maxAge !== undefined && (obj.maxAge = message.maxAge);
     message.public !== undefined && (obj.public = message.public);
+    message.staleWhileRevalidate !== undefined &&
+      (obj.staleWhileRevalidate = message.staleWhileRevalidate);
     return obj;
   },
 };

@@ -1290,6 +1290,7 @@ const baseOperationCacheConfig = {
     enable: false,
     maxAge: 0,
     public: false,
+    staleWhileRevalidate: 0,
 };
 exports.OperationCacheConfig = {
     encode(message, writer = minimal_1.Writer.create()) {
@@ -1301,6 +1302,9 @@ exports.OperationCacheConfig = {
         }
         if (message.public === true) {
             writer.uint32(24).bool(message.public);
+        }
+        if (message.staleWhileRevalidate !== 0) {
+            writer.uint32(32).int64(message.staleWhileRevalidate);
         }
         return writer;
     },
@@ -1319,6 +1323,9 @@ exports.OperationCacheConfig = {
                     break;
                 case 3:
                     message.public = reader.bool();
+                    break;
+                case 4:
+                    message.staleWhileRevalidate = longToNumber(reader.int64());
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -1347,6 +1354,13 @@ exports.OperationCacheConfig = {
         else {
             message.public = false;
         }
+        if (object.staleWhileRevalidate !== undefined &&
+            object.staleWhileRevalidate !== null) {
+            message.staleWhileRevalidate = Number(object.staleWhileRevalidate);
+        }
+        else {
+            message.staleWhileRevalidate = 0;
+        }
         return message;
     },
     fromPartial(object) {
@@ -1369,6 +1383,13 @@ exports.OperationCacheConfig = {
         else {
             message.public = false;
         }
+        if (object.staleWhileRevalidate !== undefined &&
+            object.staleWhileRevalidate !== null) {
+            message.staleWhileRevalidate = object.staleWhileRevalidate;
+        }
+        else {
+            message.staleWhileRevalidate = 0;
+        }
         return message;
     },
     toJSON(message) {
@@ -1376,6 +1397,8 @@ exports.OperationCacheConfig = {
         message.enable !== undefined && (obj.enable = message.enable);
         message.maxAge !== undefined && (obj.maxAge = message.maxAge);
         message.public !== undefined && (obj.public = message.public);
+        message.staleWhileRevalidate !== undefined &&
+            (obj.staleWhileRevalidate = message.staleWhileRevalidate);
         return obj;
     },
 };

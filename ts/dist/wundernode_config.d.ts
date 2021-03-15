@@ -103,6 +103,7 @@ export interface OperationCacheConfig {
     enable: boolean;
     maxAge: number;
     public: boolean;
+    staleWhileRevalidate: number;
 }
 export interface OperationMock {
     enabled: boolean;

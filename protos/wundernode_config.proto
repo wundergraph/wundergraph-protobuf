@@ -86,6 +86,7 @@ message OperationCacheConfig {
     bool enable = 1;
     int64 maxAge = 2;
     bool public = 3;
+    int64 staleWhileRevalidate = 4;
 }
 
 message OperationMock {
