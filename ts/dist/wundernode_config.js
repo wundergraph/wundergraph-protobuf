@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CorsConfiguration = exports.UserDefinedApi = exports.WunderGraphConfiguration = exports.WunderNodeMetrics = exports.DataUsageMetric = exports.ArgumentConfiguration = exports.TypeField = exports.FieldConfiguration = exports.HTTPHeader = exports.URLQueryConfiguration = exports.RESTSubscriptionConfiguration = exports.FetchConfiguration_HeaderEntry = exports.FetchConfiguration = exports.GraphQLSubscriptionConfiguration = exports.DataSourceCustomStatic = exports.GraphQLFederationConfiguration = exports.DataSourceCustomGraphQL = exports.DataSourceCustomREST = exports.DataSourceConfiguration = exports.EngineConfiguration = exports.OperationMock = exports.Operation = exports.Api = exports.Logging = exports.Certificate = exports.Server = exports.WunderNodeConfig = exports.argumentSourceToJSON = exports.argumentSourceFromJSON = exports.ArgumentSource = exports.hTTPMethodToJSON = exports.hTTPMethodFromJSON = exports.HTTPMethod = exports.dataSourceKindToJSON = exports.dataSourceKindFromJSON = exports.DataSourceKind = exports.operationTypeToJSON = exports.operationTypeFromJSON = exports.OperationType = exports.logLevelToJSON = exports.logLevelFromJSON = exports.LogLevel = exports.protobufPackage = void 0;
+exports.CorsConfiguration = exports.UserDefinedApi = exports.WunderGraphConfiguration = exports.WunderNodeMetrics = exports.DataUsageMetric = exports.ArgumentConfiguration = exports.TypeField = exports.FieldConfiguration = exports.HTTPHeader = exports.URLQueryConfiguration = exports.RESTSubscriptionConfiguration = exports.FetchConfiguration_HeaderEntry = exports.FetchConfiguration = exports.GraphQLSubscriptionConfiguration = exports.DataSourceCustomStatic = exports.GraphQLFederationConfiguration = exports.DataSourceCustomGraphQL = exports.DataSourceCustomREST = exports.DataSourceConfiguration = exports.EngineConfiguration = exports.OperationMock = exports.OperationCacheConfig = exports.Operation = exports.RedisCacheConfig = exports.InMemoryCacheConfig = exports.ApiCacheConfig = exports.Api = exports.Logging = exports.Certificate = exports.Server = exports.WunderNodeConfig = exports.argumentSourceToJSON = exports.argumentSourceFromJSON = exports.ArgumentSource = exports.hTTPMethodToJSON = exports.hTTPMethodFromJSON = exports.HTTPMethod = exports.dataSourceKindToJSON = exports.dataSourceKindFromJSON = exports.DataSourceKind = exports.operationTypeToJSON = exports.operationTypeFromJSON = exports.OperationType = exports.apiCacheKindToJSON = exports.apiCacheKindFromJSON = exports.ApiCacheKind = exports.logLevelToJSON = exports.logLevelFromJSON = exports.LogLevel = exports.protobufPackage = void 0;
 /* eslint-disable */
 const Long = require("long");
 const minimal_1 = require("protobufjs/minimal");
@@ -59,6 +59,41 @@ function logLevelToJSON(object) {
     }
 }
 exports.logLevelToJSON = logLevelToJSON;
+var ApiCacheKind;
+(function (ApiCacheKind) {
+    ApiCacheKind[ApiCacheKind["NO_CACHE"] = 0] = "NO_CACHE";
+    ApiCacheKind[ApiCacheKind["IN_MEMORY_CACHE"] = 1] = "IN_MEMORY_CACHE";
+    ApiCacheKind[ApiCacheKind["REDIS_CACHE"] = 2] = "REDIS_CACHE";
+})(ApiCacheKind = exports.ApiCacheKind || (exports.ApiCacheKind = {}));
+function apiCacheKindFromJSON(object) {
+    switch (object) {
+        case 0:
+        case "NO_CACHE":
+            return ApiCacheKind.NO_CACHE;
+        case 1:
+        case "IN_MEMORY_CACHE":
+            return ApiCacheKind.IN_MEMORY_CACHE;
+        case 2:
+        case "REDIS_CACHE":
+            return ApiCacheKind.REDIS_CACHE;
+        default:
+            throw new globalThis.Error("Unrecognized enum value " + object + " for enum ApiCacheKind");
+    }
+}
+exports.apiCacheKindFromJSON = apiCacheKindFromJSON;
+function apiCacheKindToJSON(object) {
+    switch (object) {
+        case ApiCacheKind.NO_CACHE:
+            return "NO_CACHE";
+        case ApiCacheKind.IN_MEMORY_CACHE:
+            return "IN_MEMORY_CACHE";
+        case ApiCacheKind.REDIS_CACHE:
+            return "REDIS_CACHE";
+        default:
+            return "UNKNOWN";
+    }
+}
+exports.apiCacheKindToJSON = apiCacheKindToJSON;
 var OperationType;
 (function (OperationType) {
     OperationType[OperationType["QUERY"] = 0] = "QUERY";
@@ -625,6 +660,9 @@ exports.Api = {
         if (message.deploymentId !== "") {
             writer.uint32(74).string(message.deploymentId);
         }
+        if (message.cacheConfig !== undefined) {
+            exports.ApiCacheConfig.encode(message.cacheConfig, writer.uint32(82).fork()).ldelim();
+        }
         return writer;
     },
     decode(input, length) {
@@ -662,6 +700,9 @@ exports.Api = {
                     break;
                 case 9:
                     message.deploymentId = reader.string();
+                    break;
+                case 10:
+                    message.cacheConfig = exports.ApiCacheConfig.decode(reader, reader.uint32());
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -730,6 +771,12 @@ exports.Api = {
         else {
             message.deploymentId = "";
         }
+        if (object.cacheConfig !== undefined && object.cacheConfig !== null) {
+            message.cacheConfig = exports.ApiCacheConfig.fromJSON(object.cacheConfig);
+        }
+        else {
+            message.cacheConfig = undefined;
+        }
         return message;
     },
     fromPartial(object) {
@@ -792,6 +839,12 @@ exports.Api = {
         else {
             message.deploymentId = "";
         }
+        if (object.cacheConfig !== undefined && object.cacheConfig !== null) {
+            message.cacheConfig = exports.ApiCacheConfig.fromPartial(object.cacheConfig);
+        }
+        else {
+            message.cacheConfig = undefined;
+        }
         return message;
     },
     toJSON(message) {
@@ -825,6 +878,208 @@ exports.Api = {
             (obj.primaryHost = message.primaryHost);
         message.deploymentId !== undefined &&
             (obj.deploymentId = message.deploymentId);
+        message.cacheConfig !== undefined &&
+            (obj.cacheConfig = message.cacheConfig
+                ? exports.ApiCacheConfig.toJSON(message.cacheConfig)
+                : undefined);
+        return obj;
+    },
+};
+const baseApiCacheConfig = { kind: 0 };
+exports.ApiCacheConfig = {
+    encode(message, writer = minimal_1.Writer.create()) {
+        if (message.kind !== 0) {
+            writer.uint32(8).int32(message.kind);
+        }
+        if (message.inMemoryConfig !== undefined) {
+            exports.InMemoryCacheConfig.encode(message.inMemoryConfig, writer.uint32(18).fork()).ldelim();
+        }
+        if (message.redisConfig !== undefined) {
+            exports.RedisCacheConfig.encode(message.redisConfig, writer.uint32(26).fork()).ldelim();
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new minimal_1.Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = globalThis.Object.create(baseApiCacheConfig);
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.kind = reader.int32();
+                    break;
+                case 2:
+                    message.inMemoryConfig = exports.InMemoryCacheConfig.decode(reader, reader.uint32());
+                    break;
+                case 3:
+                    message.redisConfig = exports.RedisCacheConfig.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = globalThis.Object.create(baseApiCacheConfig);
+        if (object.kind !== undefined && object.kind !== null) {
+            message.kind = apiCacheKindFromJSON(object.kind);
+        }
+        else {
+            message.kind = 0;
+        }
+        if (object.inMemoryConfig !== undefined && object.inMemoryConfig !== null) {
+            message.inMemoryConfig = exports.InMemoryCacheConfig.fromJSON(object.inMemoryConfig);
+        }
+        else {
+            message.inMemoryConfig = undefined;
+        }
+        if (object.redisConfig !== undefined && object.redisConfig !== null) {
+            message.redisConfig = exports.RedisCacheConfig.fromJSON(object.redisConfig);
+        }
+        else {
+            message.redisConfig = undefined;
+        }
+        return message;
+    },
+    fromPartial(object) {
+        const message = { ...baseApiCacheConfig };
+        if (object.kind !== undefined && object.kind !== null) {
+            message.kind = object.kind;
+        }
+        else {
+            message.kind = 0;
+        }
+        if (object.inMemoryConfig !== undefined && object.inMemoryConfig !== null) {
+            message.inMemoryConfig = exports.InMemoryCacheConfig.fromPartial(object.inMemoryConfig);
+        }
+        else {
+            message.inMemoryConfig = undefined;
+        }
+        if (object.redisConfig !== undefined && object.redisConfig !== null) {
+            message.redisConfig = exports.RedisCacheConfig.fromPartial(object.redisConfig);
+        }
+        else {
+            message.redisConfig = undefined;
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        message.kind !== undefined && (obj.kind = apiCacheKindToJSON(message.kind));
+        message.inMemoryConfig !== undefined &&
+            (obj.inMemoryConfig = message.inMemoryConfig
+                ? exports.InMemoryCacheConfig.toJSON(message.inMemoryConfig)
+                : undefined);
+        message.redisConfig !== undefined &&
+            (obj.redisConfig = message.redisConfig
+                ? exports.RedisCacheConfig.toJSON(message.redisConfig)
+                : undefined);
+        return obj;
+    },
+};
+const baseInMemoryCacheConfig = { maxSize: 0 };
+exports.InMemoryCacheConfig = {
+    encode(message, writer = minimal_1.Writer.create()) {
+        if (message.maxSize !== 0) {
+            writer.uint32(8).int64(message.maxSize);
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new minimal_1.Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = globalThis.Object.create(baseInMemoryCacheConfig);
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.maxSize = longToNumber(reader.int64());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = globalThis.Object.create(baseInMemoryCacheConfig);
+        if (object.maxSize !== undefined && object.maxSize !== null) {
+            message.maxSize = Number(object.maxSize);
+        }
+        else {
+            message.maxSize = 0;
+        }
+        return message;
+    },
+    fromPartial(object) {
+        const message = { ...baseInMemoryCacheConfig };
+        if (object.maxSize !== undefined && object.maxSize !== null) {
+            message.maxSize = object.maxSize;
+        }
+        else {
+            message.maxSize = 0;
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        message.maxSize !== undefined && (obj.maxSize = message.maxSize);
+        return obj;
+    },
+};
+const baseRedisCacheConfig = { redisUrlEnvVar: "" };
+exports.RedisCacheConfig = {
+    encode(message, writer = minimal_1.Writer.create()) {
+        if (message.redisUrlEnvVar !== "") {
+            writer.uint32(10).string(message.redisUrlEnvVar);
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new minimal_1.Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = globalThis.Object.create(baseRedisCacheConfig);
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.redisUrlEnvVar = reader.string();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = globalThis.Object.create(baseRedisCacheConfig);
+        if (object.redisUrlEnvVar !== undefined && object.redisUrlEnvVar !== null) {
+            message.redisUrlEnvVar = String(object.redisUrlEnvVar);
+        }
+        else {
+            message.redisUrlEnvVar = "";
+        }
+        return message;
+    },
+    fromPartial(object) {
+        const message = { ...baseRedisCacheConfig };
+        if (object.redisUrlEnvVar !== undefined && object.redisUrlEnvVar !== null) {
+            message.redisUrlEnvVar = object.redisUrlEnvVar;
+        }
+        else {
+            message.redisUrlEnvVar = "";
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        message.redisUrlEnvVar !== undefined &&
+            (obj.redisUrlEnvVar = message.redisUrlEnvVar);
         return obj;
     },
 };
@@ -855,6 +1110,9 @@ exports.Operation = {
         if (message.mock !== undefined) {
             exports.OperationMock.encode(message.mock, writer.uint32(50).fork()).ldelim();
         }
+        if (message.cacheConfig !== undefined) {
+            exports.OperationCacheConfig.encode(message.cacheConfig, writer.uint32(58).fork()).ldelim();
+        }
         return writer;
     },
     decode(input, length) {
@@ -881,6 +1139,9 @@ exports.Operation = {
                     break;
                 case 6:
                     message.mock = exports.OperationMock.decode(reader, reader.uint32());
+                    break;
+                case 7:
+                    message.cacheConfig = exports.OperationCacheConfig.decode(reader, reader.uint32());
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -928,6 +1189,12 @@ exports.Operation = {
         else {
             message.mock = undefined;
         }
+        if (object.cacheConfig !== undefined && object.cacheConfig !== null) {
+            message.cacheConfig = exports.OperationCacheConfig.fromJSON(object.cacheConfig);
+        }
+        else {
+            message.cacheConfig = undefined;
+        }
         return message;
     },
     fromPartial(object) {
@@ -969,6 +1236,12 @@ exports.Operation = {
         else {
             message.mock = undefined;
         }
+        if (object.cacheConfig !== undefined && object.cacheConfig !== null) {
+            message.cacheConfig = exports.OperationCacheConfig.fromPartial(object.cacheConfig);
+        }
+        else {
+            message.cacheConfig = undefined;
+        }
         return message;
     },
     toJSON(message) {
@@ -985,6 +1258,145 @@ exports.Operation = {
             (obj.mock = message.mock
                 ? exports.OperationMock.toJSON(message.mock)
                 : undefined);
+        message.cacheConfig !== undefined &&
+            (obj.cacheConfig = message.cacheConfig
+                ? exports.OperationCacheConfig.toJSON(message.cacheConfig)
+                : undefined);
+        return obj;
+    },
+};
+const baseOperationCacheConfig = {
+    enable: false,
+    maxAge: 0,
+    cacheKeyPrefix: "",
+    etagKeyPrefix: "",
+    public: false,
+};
+exports.OperationCacheConfig = {
+    encode(message, writer = minimal_1.Writer.create()) {
+        if (message.enable === true) {
+            writer.uint32(8).bool(message.enable);
+        }
+        if (message.maxAge !== 0) {
+            writer.uint32(16).int64(message.maxAge);
+        }
+        if (message.cacheKeyPrefix !== "") {
+            writer.uint32(26).string(message.cacheKeyPrefix);
+        }
+        if (message.etagKeyPrefix !== "") {
+            writer.uint32(34).string(message.etagKeyPrefix);
+        }
+        if (message.public === true) {
+            writer.uint32(40).bool(message.public);
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new minimal_1.Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = globalThis.Object.create(baseOperationCacheConfig);
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.enable = reader.bool();
+                    break;
+                case 2:
+                    message.maxAge = longToNumber(reader.int64());
+                    break;
+                case 3:
+                    message.cacheKeyPrefix = reader.string();
+                    break;
+                case 4:
+                    message.etagKeyPrefix = reader.string();
+                    break;
+                case 5:
+                    message.public = reader.bool();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = globalThis.Object.create(baseOperationCacheConfig);
+        if (object.enable !== undefined && object.enable !== null) {
+            message.enable = Boolean(object.enable);
+        }
+        else {
+            message.enable = false;
+        }
+        if (object.maxAge !== undefined && object.maxAge !== null) {
+            message.maxAge = Number(object.maxAge);
+        }
+        else {
+            message.maxAge = 0;
+        }
+        if (object.cacheKeyPrefix !== undefined && object.cacheKeyPrefix !== null) {
+            message.cacheKeyPrefix = String(object.cacheKeyPrefix);
+        }
+        else {
+            message.cacheKeyPrefix = "";
+        }
+        if (object.etagKeyPrefix !== undefined && object.etagKeyPrefix !== null) {
+            message.etagKeyPrefix = String(object.etagKeyPrefix);
+        }
+        else {
+            message.etagKeyPrefix = "";
+        }
+        if (object.public !== undefined && object.public !== null) {
+            message.public = Boolean(object.public);
+        }
+        else {
+            message.public = false;
+        }
+        return message;
+    },
+    fromPartial(object) {
+        const message = { ...baseOperationCacheConfig };
+        if (object.enable !== undefined && object.enable !== null) {
+            message.enable = object.enable;
+        }
+        else {
+            message.enable = false;
+        }
+        if (object.maxAge !== undefined && object.maxAge !== null) {
+            message.maxAge = object.maxAge;
+        }
+        else {
+            message.maxAge = 0;
+        }
+        if (object.cacheKeyPrefix !== undefined && object.cacheKeyPrefix !== null) {
+            message.cacheKeyPrefix = object.cacheKeyPrefix;
+        }
+        else {
+            message.cacheKeyPrefix = "";
+        }
+        if (object.etagKeyPrefix !== undefined && object.etagKeyPrefix !== null) {
+            message.etagKeyPrefix = object.etagKeyPrefix;
+        }
+        else {
+            message.etagKeyPrefix = "";
+        }
+        if (object.public !== undefined && object.public !== null) {
+            message.public = object.public;
+        }
+        else {
+            message.public = false;
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        message.enable !== undefined && (obj.enable = message.enable);
+        message.maxAge !== undefined && (obj.maxAge = message.maxAge);
+        message.cacheKeyPrefix !== undefined &&
+            (obj.cacheKeyPrefix = message.cacheKeyPrefix);
+        message.etagKeyPrefix !== undefined &&
+            (obj.etagKeyPrefix = message.etagKeyPrefix);
+        message.public !== undefined && (obj.public = message.public);
         return obj;
     },
 };

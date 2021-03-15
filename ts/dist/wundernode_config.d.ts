@@ -11,6 +11,13 @@ export declare enum LogLevel {
 }
 export declare function logLevelFromJSON(object: any): LogLevel;
 export declare function logLevelToJSON(object: LogLevel): string;
+export declare enum ApiCacheKind {
+    NO_CACHE = 0,
+    IN_MEMORY_CACHE = 1,
+    REDIS_CACHE = 2
+}
+export declare function apiCacheKindFromJSON(object: any): ApiCacheKind;
+export declare function apiCacheKindToJSON(object: ApiCacheKind): string;
 export declare enum OperationType {
     QUERY = 0,
     MUTATION = 1,
@@ -69,6 +76,18 @@ export interface Api {
     corsConfiguration: CorsConfiguration | undefined;
     primaryHost: string;
     deploymentId: string;
+    cacheConfig: ApiCacheConfig | undefined;
+}
+export interface ApiCacheConfig {
+    kind: ApiCacheKind;
+    inMemoryConfig: InMemoryCacheConfig | undefined;
+    redisConfig: RedisCacheConfig | undefined;
+}
+export interface InMemoryCacheConfig {
+    maxSize: number;
+}
+export interface RedisCacheConfig {
+    redisUrlEnvVar: string;
 }
 export interface Operation {
     name: string;
@@ -77,6 +96,14 @@ export interface Operation {
     variablesSchema: string;
     responseSchema: string;
     mock: OperationMock | undefined;
+    cacheConfig: OperationCacheConfig | undefined;
+}
+export interface OperationCacheConfig {
+    enable: boolean;
+    maxAge: number;
+    cacheKeyPrefix: string;
+    etagKeyPrefix: string;
+    public: boolean;
 }
 export interface OperationMock {
     enabled: boolean;
@@ -257,12 +284,40 @@ export declare const Api: {
     fromPartial(object: DeepPartial<Api>): Api;
     toJSON(message: Api): unknown;
 };
+export declare const ApiCacheConfig: {
+    encode(message: ApiCacheConfig, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number | undefined): ApiCacheConfig;
+    fromJSON(object: any): ApiCacheConfig;
+    fromPartial(object: DeepPartial<ApiCacheConfig>): ApiCacheConfig;
+    toJSON(message: ApiCacheConfig): unknown;
+};
+export declare const InMemoryCacheConfig: {
+    encode(message: InMemoryCacheConfig, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number | undefined): InMemoryCacheConfig;
+    fromJSON(object: any): InMemoryCacheConfig;
+    fromPartial(object: DeepPartial<InMemoryCacheConfig>): InMemoryCacheConfig;
+    toJSON(message: InMemoryCacheConfig): unknown;
+};
+export declare const RedisCacheConfig: {
+    encode(message: RedisCacheConfig, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number | undefined): RedisCacheConfig;
+    fromJSON(object: any): RedisCacheConfig;
+    fromPartial(object: DeepPartial<RedisCacheConfig>): RedisCacheConfig;
+    toJSON(message: RedisCacheConfig): unknown;
+};
 export declare const Operation: {
     encode(message: Operation, writer?: Writer): Writer;
     decode(input: Reader | Uint8Array, length?: number | undefined): Operation;
     fromJSON(object: any): Operation;
     fromPartial(object: DeepPartial<Operation>): Operation;
     toJSON(message: Operation): unknown;
+};
+export declare const OperationCacheConfig: {
+    encode(message: OperationCacheConfig, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number | undefined): OperationCacheConfig;
+    fromJSON(object: any): OperationCacheConfig;
+    fromPartial(object: DeepPartial<OperationCacheConfig>): OperationCacheConfig;
+    toJSON(message: OperationCacheConfig): unknown;
 };
 export declare const OperationMock: {
     encode(message: OperationMock, writer?: Writer): Writer;

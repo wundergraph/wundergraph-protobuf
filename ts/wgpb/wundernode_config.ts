@@ -60,6 +60,43 @@ export function logLevelToJSON(object: LogLevel): string {
   }
 }
 
+export enum ApiCacheKind {
+  NO_CACHE = 0,
+  IN_MEMORY_CACHE = 1,
+  REDIS_CACHE = 2,
+}
+
+export function apiCacheKindFromJSON(object: any): ApiCacheKind {
+  switch (object) {
+    case 0:
+    case "NO_CACHE":
+      return ApiCacheKind.NO_CACHE;
+    case 1:
+    case "IN_MEMORY_CACHE":
+      return ApiCacheKind.IN_MEMORY_CACHE;
+    case 2:
+    case "REDIS_CACHE":
+      return ApiCacheKind.REDIS_CACHE;
+    default:
+      throw new globalThis.Error(
+        "Unrecognized enum value " + object + " for enum ApiCacheKind"
+      );
+  }
+}
+
+export function apiCacheKindToJSON(object: ApiCacheKind): string {
+  switch (object) {
+    case ApiCacheKind.NO_CACHE:
+      return "NO_CACHE";
+    case ApiCacheKind.IN_MEMORY_CACHE:
+      return "IN_MEMORY_CACHE";
+    case ApiCacheKind.REDIS_CACHE:
+      return "REDIS_CACHE";
+    default:
+      return "UNKNOWN";
+  }
+}
+
 export enum OperationType {
   QUERY = 0,
   MUTATION = 1,
@@ -242,6 +279,21 @@ export interface Api {
   corsConfiguration: CorsConfiguration | undefined;
   primaryHost: string;
   deploymentId: string;
+  cacheConfig: ApiCacheConfig | undefined;
+}
+
+export interface ApiCacheConfig {
+  kind: ApiCacheKind;
+  inMemoryConfig: InMemoryCacheConfig | undefined;
+  redisConfig: RedisCacheConfig | undefined;
+}
+
+export interface InMemoryCacheConfig {
+  maxSize: number;
+}
+
+export interface RedisCacheConfig {
+  redisUrlEnvVar: string;
 }
 
 export interface Operation {
@@ -251,6 +303,15 @@ export interface Operation {
   variablesSchema: string;
   responseSchema: string;
   mock: OperationMock | undefined;
+  cacheConfig: OperationCacheConfig | undefined;
+}
+
+export interface OperationCacheConfig {
+  enable: boolean;
+  maxAge: number;
+  cacheKeyPrefix: string;
+  etagKeyPrefix: string;
+  public: boolean;
 }
 
 export interface OperationMock {
@@ -873,6 +934,12 @@ export const Api = {
     if (message.deploymentId !== "") {
       writer.uint32(74).string(message.deploymentId);
     }
+    if (message.cacheConfig !== undefined) {
+      ApiCacheConfig.encode(
+        message.cacheConfig,
+        writer.uint32(82).fork()
+      ).ldelim();
+    }
     return writer;
   },
 
@@ -917,6 +984,9 @@ export const Api = {
           break;
         case 9:
           message.deploymentId = reader.string();
+          break;
+        case 10:
+          message.cacheConfig = ApiCacheConfig.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -991,6 +1061,11 @@ export const Api = {
     } else {
       message.deploymentId = "";
     }
+    if (object.cacheConfig !== undefined && object.cacheConfig !== null) {
+      message.cacheConfig = ApiCacheConfig.fromJSON(object.cacheConfig);
+    } else {
+      message.cacheConfig = undefined;
+    }
     return message;
   },
 
@@ -1059,6 +1134,11 @@ export const Api = {
     } else {
       message.deploymentId = "";
     }
+    if (object.cacheConfig !== undefined && object.cacheConfig !== null) {
+      message.cacheConfig = ApiCacheConfig.fromPartial(object.cacheConfig);
+    } else {
+      message.cacheConfig = undefined;
+    }
     return message;
   },
 
@@ -1093,6 +1173,247 @@ export const Api = {
       (obj.primaryHost = message.primaryHost);
     message.deploymentId !== undefined &&
       (obj.deploymentId = message.deploymentId);
+    message.cacheConfig !== undefined &&
+      (obj.cacheConfig = message.cacheConfig
+        ? ApiCacheConfig.toJSON(message.cacheConfig)
+        : undefined);
+    return obj;
+  },
+};
+
+const baseApiCacheConfig: object = { kind: 0 };
+
+export const ApiCacheConfig = {
+  encode(message: ApiCacheConfig, writer: Writer = Writer.create()): Writer {
+    if (message.kind !== 0) {
+      writer.uint32(8).int32(message.kind);
+    }
+    if (message.inMemoryConfig !== undefined) {
+      InMemoryCacheConfig.encode(
+        message.inMemoryConfig,
+        writer.uint32(18).fork()
+      ).ldelim();
+    }
+    if (message.redisConfig !== undefined) {
+      RedisCacheConfig.encode(
+        message.redisConfig,
+        writer.uint32(26).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): ApiCacheConfig {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = globalThis.Object.create(
+      baseApiCacheConfig
+    ) as ApiCacheConfig;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.kind = reader.int32() as any;
+          break;
+        case 2:
+          message.inMemoryConfig = InMemoryCacheConfig.decode(
+            reader,
+            reader.uint32()
+          );
+          break;
+        case 3:
+          message.redisConfig = RedisCacheConfig.decode(
+            reader,
+            reader.uint32()
+          );
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ApiCacheConfig {
+    const message = globalThis.Object.create(
+      baseApiCacheConfig
+    ) as ApiCacheConfig;
+    if (object.kind !== undefined && object.kind !== null) {
+      message.kind = apiCacheKindFromJSON(object.kind);
+    } else {
+      message.kind = 0;
+    }
+    if (object.inMemoryConfig !== undefined && object.inMemoryConfig !== null) {
+      message.inMemoryConfig = InMemoryCacheConfig.fromJSON(
+        object.inMemoryConfig
+      );
+    } else {
+      message.inMemoryConfig = undefined;
+    }
+    if (object.redisConfig !== undefined && object.redisConfig !== null) {
+      message.redisConfig = RedisCacheConfig.fromJSON(object.redisConfig);
+    } else {
+      message.redisConfig = undefined;
+    }
+    return message;
+  },
+
+  fromPartial(object: DeepPartial<ApiCacheConfig>): ApiCacheConfig {
+    const message = { ...baseApiCacheConfig } as ApiCacheConfig;
+    if (object.kind !== undefined && object.kind !== null) {
+      message.kind = object.kind;
+    } else {
+      message.kind = 0;
+    }
+    if (object.inMemoryConfig !== undefined && object.inMemoryConfig !== null) {
+      message.inMemoryConfig = InMemoryCacheConfig.fromPartial(
+        object.inMemoryConfig
+      );
+    } else {
+      message.inMemoryConfig = undefined;
+    }
+    if (object.redisConfig !== undefined && object.redisConfig !== null) {
+      message.redisConfig = RedisCacheConfig.fromPartial(object.redisConfig);
+    } else {
+      message.redisConfig = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: ApiCacheConfig): unknown {
+    const obj: any = {};
+    message.kind !== undefined && (obj.kind = apiCacheKindToJSON(message.kind));
+    message.inMemoryConfig !== undefined &&
+      (obj.inMemoryConfig = message.inMemoryConfig
+        ? InMemoryCacheConfig.toJSON(message.inMemoryConfig)
+        : undefined);
+    message.redisConfig !== undefined &&
+      (obj.redisConfig = message.redisConfig
+        ? RedisCacheConfig.toJSON(message.redisConfig)
+        : undefined);
+    return obj;
+  },
+};
+
+const baseInMemoryCacheConfig: object = { maxSize: 0 };
+
+export const InMemoryCacheConfig = {
+  encode(
+    message: InMemoryCacheConfig,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.maxSize !== 0) {
+      writer.uint32(8).int64(message.maxSize);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): InMemoryCacheConfig {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = globalThis.Object.create(
+      baseInMemoryCacheConfig
+    ) as InMemoryCacheConfig;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.maxSize = longToNumber(reader.int64() as Long);
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): InMemoryCacheConfig {
+    const message = globalThis.Object.create(
+      baseInMemoryCacheConfig
+    ) as InMemoryCacheConfig;
+    if (object.maxSize !== undefined && object.maxSize !== null) {
+      message.maxSize = Number(object.maxSize);
+    } else {
+      message.maxSize = 0;
+    }
+    return message;
+  },
+
+  fromPartial(object: DeepPartial<InMemoryCacheConfig>): InMemoryCacheConfig {
+    const message = { ...baseInMemoryCacheConfig } as InMemoryCacheConfig;
+    if (object.maxSize !== undefined && object.maxSize !== null) {
+      message.maxSize = object.maxSize;
+    } else {
+      message.maxSize = 0;
+    }
+    return message;
+  },
+
+  toJSON(message: InMemoryCacheConfig): unknown {
+    const obj: any = {};
+    message.maxSize !== undefined && (obj.maxSize = message.maxSize);
+    return obj;
+  },
+};
+
+const baseRedisCacheConfig: object = { redisUrlEnvVar: "" };
+
+export const RedisCacheConfig = {
+  encode(message: RedisCacheConfig, writer: Writer = Writer.create()): Writer {
+    if (message.redisUrlEnvVar !== "") {
+      writer.uint32(10).string(message.redisUrlEnvVar);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): RedisCacheConfig {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = globalThis.Object.create(
+      baseRedisCacheConfig
+    ) as RedisCacheConfig;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.redisUrlEnvVar = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): RedisCacheConfig {
+    const message = globalThis.Object.create(
+      baseRedisCacheConfig
+    ) as RedisCacheConfig;
+    if (object.redisUrlEnvVar !== undefined && object.redisUrlEnvVar !== null) {
+      message.redisUrlEnvVar = String(object.redisUrlEnvVar);
+    } else {
+      message.redisUrlEnvVar = "";
+    }
+    return message;
+  },
+
+  fromPartial(object: DeepPartial<RedisCacheConfig>): RedisCacheConfig {
+    const message = { ...baseRedisCacheConfig } as RedisCacheConfig;
+    if (object.redisUrlEnvVar !== undefined && object.redisUrlEnvVar !== null) {
+      message.redisUrlEnvVar = object.redisUrlEnvVar;
+    } else {
+      message.redisUrlEnvVar = "";
+    }
+    return message;
+  },
+
+  toJSON(message: RedisCacheConfig): unknown {
+    const obj: any = {};
+    message.redisUrlEnvVar !== undefined &&
+      (obj.redisUrlEnvVar = message.redisUrlEnvVar);
     return obj;
   },
 };
@@ -1125,6 +1446,12 @@ export const Operation = {
     if (message.mock !== undefined) {
       OperationMock.encode(message.mock, writer.uint32(50).fork()).ldelim();
     }
+    if (message.cacheConfig !== undefined) {
+      OperationCacheConfig.encode(
+        message.cacheConfig,
+        writer.uint32(58).fork()
+      ).ldelim();
+    }
     return writer;
   },
 
@@ -1152,6 +1479,12 @@ export const Operation = {
           break;
         case 6:
           message.mock = OperationMock.decode(reader, reader.uint32());
+          break;
+        case 7:
+          message.cacheConfig = OperationCacheConfig.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         default:
           reader.skipType(tag & 7);
@@ -1196,6 +1529,11 @@ export const Operation = {
     } else {
       message.mock = undefined;
     }
+    if (object.cacheConfig !== undefined && object.cacheConfig !== null) {
+      message.cacheConfig = OperationCacheConfig.fromJSON(object.cacheConfig);
+    } else {
+      message.cacheConfig = undefined;
+    }
     return message;
   },
 
@@ -1234,6 +1572,13 @@ export const Operation = {
     } else {
       message.mock = undefined;
     }
+    if (object.cacheConfig !== undefined && object.cacheConfig !== null) {
+      message.cacheConfig = OperationCacheConfig.fromPartial(
+        object.cacheConfig
+      );
+    } else {
+      message.cacheConfig = undefined;
+    }
     return message;
   },
 
@@ -1251,6 +1596,148 @@ export const Operation = {
       (obj.mock = message.mock
         ? OperationMock.toJSON(message.mock)
         : undefined);
+    message.cacheConfig !== undefined &&
+      (obj.cacheConfig = message.cacheConfig
+        ? OperationCacheConfig.toJSON(message.cacheConfig)
+        : undefined);
+    return obj;
+  },
+};
+
+const baseOperationCacheConfig: object = {
+  enable: false,
+  maxAge: 0,
+  cacheKeyPrefix: "",
+  etagKeyPrefix: "",
+  public: false,
+};
+
+export const OperationCacheConfig = {
+  encode(
+    message: OperationCacheConfig,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.enable === true) {
+      writer.uint32(8).bool(message.enable);
+    }
+    if (message.maxAge !== 0) {
+      writer.uint32(16).int64(message.maxAge);
+    }
+    if (message.cacheKeyPrefix !== "") {
+      writer.uint32(26).string(message.cacheKeyPrefix);
+    }
+    if (message.etagKeyPrefix !== "") {
+      writer.uint32(34).string(message.etagKeyPrefix);
+    }
+    if (message.public === true) {
+      writer.uint32(40).bool(message.public);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): OperationCacheConfig {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = globalThis.Object.create(
+      baseOperationCacheConfig
+    ) as OperationCacheConfig;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.enable = reader.bool();
+          break;
+        case 2:
+          message.maxAge = longToNumber(reader.int64() as Long);
+          break;
+        case 3:
+          message.cacheKeyPrefix = reader.string();
+          break;
+        case 4:
+          message.etagKeyPrefix = reader.string();
+          break;
+        case 5:
+          message.public = reader.bool();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): OperationCacheConfig {
+    const message = globalThis.Object.create(
+      baseOperationCacheConfig
+    ) as OperationCacheConfig;
+    if (object.enable !== undefined && object.enable !== null) {
+      message.enable = Boolean(object.enable);
+    } else {
+      message.enable = false;
+    }
+    if (object.maxAge !== undefined && object.maxAge !== null) {
+      message.maxAge = Number(object.maxAge);
+    } else {
+      message.maxAge = 0;
+    }
+    if (object.cacheKeyPrefix !== undefined && object.cacheKeyPrefix !== null) {
+      message.cacheKeyPrefix = String(object.cacheKeyPrefix);
+    } else {
+      message.cacheKeyPrefix = "";
+    }
+    if (object.etagKeyPrefix !== undefined && object.etagKeyPrefix !== null) {
+      message.etagKeyPrefix = String(object.etagKeyPrefix);
+    } else {
+      message.etagKeyPrefix = "";
+    }
+    if (object.public !== undefined && object.public !== null) {
+      message.public = Boolean(object.public);
+    } else {
+      message.public = false;
+    }
+    return message;
+  },
+
+  fromPartial(object: DeepPartial<OperationCacheConfig>): OperationCacheConfig {
+    const message = { ...baseOperationCacheConfig } as OperationCacheConfig;
+    if (object.enable !== undefined && object.enable !== null) {
+      message.enable = object.enable;
+    } else {
+      message.enable = false;
+    }
+    if (object.maxAge !== undefined && object.maxAge !== null) {
+      message.maxAge = object.maxAge;
+    } else {
+      message.maxAge = 0;
+    }
+    if (object.cacheKeyPrefix !== undefined && object.cacheKeyPrefix !== null) {
+      message.cacheKeyPrefix = object.cacheKeyPrefix;
+    } else {
+      message.cacheKeyPrefix = "";
+    }
+    if (object.etagKeyPrefix !== undefined && object.etagKeyPrefix !== null) {
+      message.etagKeyPrefix = object.etagKeyPrefix;
+    } else {
+      message.etagKeyPrefix = "";
+    }
+    if (object.public !== undefined && object.public !== null) {
+      message.public = object.public;
+    } else {
+      message.public = false;
+    }
+    return message;
+  },
+
+  toJSON(message: OperationCacheConfig): unknown {
+    const obj: any = {};
+    message.enable !== undefined && (obj.enable = message.enable);
+    message.maxAge !== undefined && (obj.maxAge = message.maxAge);
+    message.cacheKeyPrefix !== undefined &&
+      (obj.cacheKeyPrefix = message.cacheKeyPrefix);
+    message.etagKeyPrefix !== undefined &&
+      (obj.etagKeyPrefix = message.etagKeyPrefix);
+    message.public !== undefined && (obj.public = message.public);
     return obj;
   },
 };

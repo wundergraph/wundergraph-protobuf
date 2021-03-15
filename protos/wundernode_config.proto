@@ -48,6 +48,27 @@ message Api {
     CorsConfiguration corsConfiguration = 7;
     string primaryHost = 8;
     string deploymentId = 9;
+    ApiCacheConfig cacheConfig = 10;
+}
+
+message ApiCacheConfig {
+    ApiCacheKind kind = 1;
+    InMemoryCacheConfig inMemoryConfig = 2;
+    RedisCacheConfig redisConfig = 3;
+}
+
+enum ApiCacheKind {
+    NO_CACHE = 0;
+    IN_MEMORY_CACHE = 1;
+    REDIS_CACHE = 2;
+}
+
+message InMemoryCacheConfig {
+    int64 maxSize = 1;
+}
+
+message RedisCacheConfig {
+    string redisUrlEnvVar = 1;
 }
 
 message Operation {
@@ -57,6 +78,15 @@ message Operation {
     string variablesSchema = 4;
     string responseSchema = 5;
     OperationMock mock = 6;
+    OperationCacheConfig cacheConfig = 7;
+}
+
+message OperationCacheConfig {
+    bool enable = 1;
+    int64 maxAge = 2;
+    string cacheKeyPrefix = 3;
+    string etagKeyPrefix = 4;
+    bool public = 5;
 }
 
 message OperationMock {
